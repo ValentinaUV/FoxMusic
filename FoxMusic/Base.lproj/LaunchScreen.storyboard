@@ -20,7 +20,7 @@
                             <stackView opaque="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="0Od-1c-cvb">
                                 <rect key="frame" x="64" y="236" width="262" height="372"/>
                                 <subviews>
-                                    <imageView clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" image="fox-logo-dark" adjustsImageSizeForAccessibilityContentSizeCategory="YES" id="LZb-po-Ehn">
+                                    <imageView clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" image="fox-play-logo" adjustsImageSizeForAccessibilityContentSizeCategory="YES" id="LZb-po-Ehn">
                                         <rect key="frame" x="0.0" y="0.0" width="262" height="335.66666666666669"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <accessibility key="accessibilityConfiguration">
@@ -59,7 +59,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="fox-logo-dark" width="346" height="285"/>
+        <image name="fox-play-logo" width="346.66665649414062" height="346.66665649414062"/>
         <namedColor name="blue">
             <color red="0.18000000715255737" green="0.19200000166893005" blue="0.29399999976158142" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
