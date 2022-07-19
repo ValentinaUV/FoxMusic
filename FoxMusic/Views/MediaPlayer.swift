@@ -20,12 +20,51 @@ final class MediaPlayer: UIView {
   }()
   
   private lazy var albumCover: UIImageView = {
-    let view = UIImageView()
+    let width = UIScreen.main.bounds.width * 0.66
+    let view = UIImageView(frame: CGRect(x: 0, y: 0, width: width, height: width))
     view.translatesAutoresizingMaskIntoConstraints = false
     view.contentMode = .scaleAspectFill
-    view.clipsToBounds = true
-    view.layer.cornerRadius = 100
-    view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMaxYCorner]
+    view.roundedImage()
+    view.layer.borderWidth = 15.0
+    view.layer.borderColor = UIColor.black.cgColor
+    return view
+  }()
+  
+  private lazy var albumCircle: UIImageView = {
+    let width = UIScreen.main.bounds.width * 0.52
+    let lineWidth = 1.0
+    let renderer = UIGraphicsImageRenderer(size: CGSize(width: width + 2, height: width + 2))
+    let image = renderer.image { ctx in
+      ctx.cgContext.setFillColor(UIColor.black.withAlphaComponent(0.0).cgColor)
+      ctx.cgContext.setStrokeColor(UIColor(named: "orange")?.cgColor ?? UIColor.systemOrange.cgColor)
+      ctx.cgContext.setLineWidth(lineWidth)
+      
+      let rectangle = CGRect(x: lineWidth, y: lineWidth, width: width, height: width)
+      ctx.cgContext.addEllipse(in: rectangle)
+      ctx.cgContext.drawPath(using: .fillStroke)
+    }
+    
+    let view = UIImageView(image: image)
+    view.translatesAutoresizingMaskIntoConstraints = false
+    return view
+  }()
+  
+  private lazy var albumCircleCenter: UIImageView = {
+    let width = 35.0
+    let lineWidth = 12.0
+    let renderer = UIGraphicsImageRenderer(size: CGSize(width: width + lineWidth, height: width + lineWidth))
+    let image = renderer.image { ctx in
+      ctx.cgContext.setFillColor(UIColor.black.cgColor)
+      ctx.cgContext.setStrokeColor(UIColor(named: "orange")?.cgColor ?? UIColor.systemOrange.cgColor)
+      ctx.cgContext.setLineWidth(lineWidth)
+      
+      let rectangle = CGRect(x: 6, y: 6, width: width, height: width)
+      ctx.cgContext.addEllipse(in: rectangle)
+      ctx.cgContext.drawPath(using: .fillStroke)
+    }
+    
+    let view = UIImageView(image: image)
+    view.translatesAutoresizingMaskIntoConstraints = false
     return view
   }()
   
@@ -123,11 +162,12 @@ final class MediaPlayer: UIView {
   private func setupView() {
     albumName.text = album.name
     albumCover.image = UIImage(named: album.image)
+    backgroundColor = UIColor(named: "darkColor")
     setupPlayer(song: album.songs[playingIndex])
     [albumName, songNameLabel, artistNameLabel, elapsedTimeLabel, remainingTimeLabel].forEach { label in
       label.textColor = .white
     }
-    [albumName, albumCover, songNameLabel, artistNameLabel, progressBar, elapsedTimeLabel, remainingTimeLabel, controlStack].forEach { v in
+    [albumName, albumCover, albumCircle, albumCircleCenter, songNameLabel, artistNameLabel, progressBar, elapsedTimeLabel, remainingTimeLabel, controlStack].forEach { v in
       addSubview(v)
     }
     setupConstraints()
@@ -143,10 +183,22 @@ final class MediaPlayer: UIView {
     
     //album cover
     NSLayoutConstraint.activate([
-      albumCover.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-      albumCover.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-      albumCover.topAnchor.constraint(equalTo: albumName.bottomAnchor, constant: 32),
-      albumCover.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.5)
+      albumCover.centerXAnchor.constraint(equalTo: centerXAnchor),
+      albumCover.topAnchor.constraint(equalTo: albumName.bottomAnchor, constant: 40),
+      albumCover.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.65),
+      albumCover.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.65)
+    ])
+    
+    //album circle
+    NSLayoutConstraint.activate([
+      albumCircle.centerXAnchor.constraint(equalTo: albumCover.centerXAnchor),
+      albumCircle.centerYAnchor.constraint(equalTo: albumCover.centerYAnchor),
+    ])
+    
+    //album circle center
+    NSLayoutConstraint.activate([
+      albumCircleCenter.centerXAnchor.constraint(equalTo: albumCover.centerXAnchor),
+      albumCircleCenter.centerYAnchor.constraint(equalTo: albumCover.centerYAnchor),
     ])
     
     //song name
@@ -294,5 +346,13 @@ final class MediaPlayer: UIView {
 extension MediaPlayer: AVAudioPlayerDelegate {
   func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
     didTapNext(nextButton)
+  }
+}
+
+extension UIImageView {
+  func roundedImage() {
+    self.layer.cornerRadius = (self.frame.size.width) / 2;
+    self.clipsToBounds = true
+//    self.layer.masksToBounds = false
   }
 }

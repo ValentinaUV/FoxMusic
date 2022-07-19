@@ -19,6 +19,10 @@ class ViewController: UIViewController {
     table.register(AlbumTableViewCell.self, forCellReuseIdentifier: "cell")
     table.estimatedRowHeight = 132
     table.rowHeight = UITableView.automaticDimension
+    table.backgroundColor = UIColor(named: "blue")
+    var image = UIImageView(image: UIImage(named: "fox-screen"))
+    image.contentMode = .scaleAspectFit
+    table.backgroundView = image
     table.tableFooterView = UIView()
     return table
   }()
@@ -35,8 +39,6 @@ class ViewController: UIViewController {
   }
   
   private func setupConstraints() {
-    //uitableview
-    
     NSLayoutConstraint.activate([
       tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),

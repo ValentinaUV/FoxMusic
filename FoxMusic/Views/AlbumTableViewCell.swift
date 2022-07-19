@@ -45,6 +45,13 @@ final class AlbumTableViewCell: UITableViewCell {
     return view
   }()
   
+  private lazy var stackLine: UIStackView = {
+    let view = UIStackView()
+    view.translatesAutoresizingMaskIntoConstraints = false
+    view.backgroundColor = UIColor(named: "darkColor")
+    return view
+  }()
+  
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -53,34 +60,45 @@ final class AlbumTableViewCell: UITableViewCell {
   
   private func setupView() {
     [albumCover, albumName, songsCount].forEach{ (v) in
-      contentView.addSubview(v)
+      stackLine.addSubview(v)
     }
+    contentView.addSubview(stackLine)
+    backgroundColor = UIColor(named: "blue")?.withAlphaComponent(0.0)
     setupConstraints()
   }
   
   private func setupConstraints() {
+    
+    //stackLine
+    NSLayoutConstraint.activate([
+      stackLine.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+      stackLine.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+      stackLine.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+      stackLine.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor)
+    ])
+    
     //album cover
     NSLayoutConstraint.activate([
-      albumCover.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-      albumCover.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+      albumCover.leadingAnchor.constraint(equalTo: stackLine.leadingAnchor, constant: 16),
+      albumCover.topAnchor.constraint(equalTo: stackLine.topAnchor, constant: 16),
       albumCover.widthAnchor.constraint(equalToConstant: 100),
       albumCover.heightAnchor.constraint(equalToConstant: 100),
-      albumCover.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16)
+      albumCover.bottomAnchor.constraint(lessThanOrEqualTo: stackLine.bottomAnchor, constant: -16)
     ])
     
     //album name
     NSLayoutConstraint.activate([
       albumName.leadingAnchor.constraint(equalTo: albumCover.trailingAnchor, constant: 16),
-      albumName.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-      albumName.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+      albumName.topAnchor.constraint(equalTo: stackLine.topAnchor, constant: 16),
+      albumName.trailingAnchor.constraint(equalTo: stackLine.trailingAnchor, constant: -16)
     ])
     
     //songs count
     NSLayoutConstraint.activate([
       songsCount.leadingAnchor.constraint(equalTo: albumCover.trailingAnchor, constant: 16),
       songsCount.topAnchor.constraint(equalTo: albumName.bottomAnchor, constant: 8),
-      songsCount.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-      songsCount.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16)
+      songsCount.trailingAnchor.constraint(equalTo: stackLine.trailingAnchor, constant: -16),
+      songsCount.bottomAnchor.constraint(lessThanOrEqualTo: stackLine.bottomAnchor, constant: -16)
     ])
     
   }
