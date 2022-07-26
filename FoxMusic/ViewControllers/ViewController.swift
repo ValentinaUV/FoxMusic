@@ -66,6 +66,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let vc = MusicPlayerViewController(album: albums[indexPath.row])
     tableView.deselectRow(at: indexPath, animated: true)
-    present(vc, animated: true, completion: nil)
+    show(vc, sender: self)
   }
 }
