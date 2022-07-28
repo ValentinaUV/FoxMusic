@@ -8,17 +8,9 @@
 import UIKit
 import AVKit
 
-
 final class MediaPlayer: UIView {
   
   var album: Album
-  private lazy var albumName: UILabel = {
-    let view = UILabel()
-    view.translatesAutoresizingMaskIntoConstraints = false
-    view.textAlignment = .center
-    view.font = .systemFont(ofSize: 32, weight: .bold)
-    return view
-  }()
   
   private lazy var albumCover: UIImageView = {
     let width = UIScreen.main.bounds.width * 0.66
@@ -69,72 +61,57 @@ final class MediaPlayer: UIView {
     return view
   }()
   
-//  private lazy var progressArc: UIControl = {
-//    let options = [
-//      ArcSliderOption.barColor(UIColor(named: "darkGrey") ?? UIColor.darkGray),
-//      ArcSliderOption.thumbColor(UIColor(named: "orange") ?? UIColor.systemOrange),
-//      ArcSliderOption.trackingColor(UIColor(named: "darkGrey") ?? UIColor.darkGray),
-//      ArcSliderOption.barWidth(5),
-//      ArcSliderOption.thumbWidth(20),
-////      ArcSliderOption.thumbPosition(20),
-//      ArcSliderOption.startAngle(-90),
-//      ArcSliderOption.maxValue(90),
-//      ArcSliderOption.minValue(0),
-//      ArcSliderOption.sliderEnabled(true)
-//    ]
-//    let arcSlider = ArcSlider(frame: bounds, options: options)
-//    arcSlider.translatesAutoresizingMaskIntoConstraints = false
-//    arcSlider.addTarget(self, action: #selector(progressScrubbed(_:)), for: .valueChanged)
-////    view.addSubview(circleSlider)
-//    return arcSlider
-//  }()
-  
   private lazy var progressArc: CircularSlider = {
 
-    let slider = CircularSlider(frame: bounds, options: CircularSliderOptions())
+    var options = CircularSliderOptions()
+    options.barColor = UIColor.init(named: "darkGrey") ?? .darkGray
+    options.thumbColor = UIColor(named: "orange") ?? .systemOrange
+    let slider = CircularSlider(frame: bounds, options: options)
     slider.translatesAutoresizingMaskIntoConstraints = false
     slider.backgroundColor = UIColor.black.withAlphaComponent(0.0)
-//    slider.addTarget(self, action: #selector(progressScrubbed(_:)), for: .valueChanged)
+    slider.addTarget(self, action: #selector(progressScrubbed(_:)), for: .valueChanged)
     return slider
-  }()
-  
-  private lazy var progressBar: UISlider = {
-    let view = UISlider()
-    view.translatesAutoresizingMaskIntoConstraints = false
-    view.addTarget(self, action: #selector(progressScrubbed(_:)), for: .valueChanged)
-    view.minimumTrackTintColor = UIColor(named: "orange")
-    view.thumbTintColor = UIColor(named: "orange")
-    
-    return view
   }()
   
   private lazy var elapsedTimeLabel: UILabel = {
     let view = UILabel()
     view.translatesAutoresizingMaskIntoConstraints = false
-    view.font = .systemFont(ofSize: 14, weight: .light)
+    view.font = .systemFont(ofSize: 14)
     view.text = "00:00"
+    view.textColor = .white
     return view
   }()
   
   private lazy var remainingTimeLabel: UILabel = {
     let view = UILabel()
     view.translatesAutoresizingMaskIntoConstraints = false
-    view.font = .systemFont(ofSize: 14, weight: .light)
+    view.font = .systemFont(ofSize: 14)
     view.text = "00:00"
-    return view
-  }()
-  
-  private lazy var songNameLabel: UILabel = {
-    let view = UILabel()
-    view.translatesAutoresizingMaskIntoConstraints = false
-    view.font = .systemFont(ofSize: 16, weight: .bold)
+    view.textColor = .white
     return view
   }()
   
   private lazy var artistNameLabel: UILabel = {
     let view = UILabel()
     view.translatesAutoresizingMaskIntoConstraints = false
-    view.font = .systemFont(ofSize: 16, weight: .light)
+    view.font = .systemFont(ofSize: 16)
+    view.textColor = .white
+    return view
+  }()
+  
+  private lazy var songNameLabel: UILabel = {
+    let view = UILabel()
+    view.translatesAutoresizingMaskIntoConstraints = false
+    view.font = .systemFont(ofSize: 20, weight: .bold)
+    view.textColor = UIColor.systemOrange
+    return view
+  }()
+  
+  private lazy var albumName: UILabel = {
+    let view = UILabel()
+    view.translatesAutoresizingMaskIntoConstraints = false
+    view.font = .systemFont(ofSize: 16)
+    view.textColor = .white
     return view
   }()
   
@@ -196,9 +173,6 @@ final class MediaPlayer: UIView {
     albumCover.image = UIImage(named: album.image)
     backgroundColor = UIColor(named: "darkColor")
     setupPlayer(song: album.songs[playingIndex])
-    [albumName, songNameLabel, artistNameLabel, elapsedTimeLabel, remainingTimeLabel].forEach { label in
-      label.textColor = .white
-    }
     [albumName, albumCover, albumCircle, albumCircleCenter, songNameLabel, artistNameLabel, progressArc, elapsedTimeLabel, remainingTimeLabel, controlStack].forEach { v in
       addSubview(v)
     }
@@ -206,17 +180,11 @@ final class MediaPlayer: UIView {
   }
   
   private func setupConstraints() {
-    //album name
-    NSLayoutConstraint.activate([
-      albumName.leadingAnchor.constraint(equalTo: leadingAnchor),
-      albumName.trailingAnchor.constraint(equalTo: trailingAnchor),
-      albumName.topAnchor.constraint(equalTo: topAnchor, constant: 16)
-    ])
     
     //album cover
     NSLayoutConstraint.activate([
       albumCover.centerXAnchor.constraint(equalTo: centerXAnchor),
-      albumCover.topAnchor.constraint(equalTo: albumName.bottomAnchor, constant: 40),
+      albumCover.topAnchor.constraint(equalTo: topAnchor, constant: 120),
       albumCover.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.65),
       albumCover.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.65)
     ])
@@ -237,9 +205,20 @@ final class MediaPlayer: UIView {
     NSLayoutConstraint.activate([
       progressArc.centerXAnchor.constraint(equalTo: albumCover.centerXAnchor),
       progressArc.centerYAnchor.constraint(equalTo: albumCover.centerYAnchor),
-//      progressArc.topAnchor.constraint(equalTo: albumCover.topAnchor),
-      progressArc.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.8),
-      progressArc.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.8)
+      progressArc.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.85),
+      progressArc.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.85)
+    ])
+    
+    //elapsed time
+    NSLayoutConstraint.activate([
+      elapsedTimeLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+      elapsedTimeLabel.bottomAnchor.constraint(equalTo: progressArc.centerYAnchor, constant: -15)
+    ])
+    
+    //remaining time
+    NSLayoutConstraint.activate([
+      remainingTimeLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+      remainingTimeLabel.bottomAnchor.constraint(equalTo: progressArc.centerYAnchor, constant: -15)
     ])
     
     //progress bar
@@ -249,37 +228,29 @@ final class MediaPlayer: UIView {
 //      progressBar.topAnchor.constraint(equalTo: albumCover.bottomAnchor, constant: 8)
 //    ])
     
-    //song name
-    NSLayoutConstraint.activate([
-      songNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-      songNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-      songNameLabel.topAnchor.constraint(equalTo: albumCover.bottomAnchor, constant: 32)
-    ])
-    
     //artist name
     NSLayoutConstraint.activate([
-      artistNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-      artistNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-      artistNameLabel.topAnchor.constraint(equalTo: songNameLabel.bottomAnchor, constant: 8)
+      artistNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+      artistNameLabel.topAnchor.constraint(equalTo: progressArc.bottomAnchor, constant: 20)
     ])
     
-    //elapsed time
+    //song name
     NSLayoutConstraint.activate([
-      elapsedTimeLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-      elapsedTimeLabel.topAnchor.constraint(equalTo: artistNameLabel.bottomAnchor, constant: 8)
+      songNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+      songNameLabel.topAnchor.constraint(equalTo: artistNameLabel.bottomAnchor, constant: 8)
     ])
     
-    //remaining time
+    //album name
     NSLayoutConstraint.activate([
-      remainingTimeLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-      remainingTimeLabel.topAnchor.constraint(equalTo: artistNameLabel.bottomAnchor, constant: 8)
+      albumName.centerXAnchor.constraint(equalTo: centerXAnchor),
+      albumName.topAnchor.constraint(equalTo: songNameLabel.bottomAnchor, constant: 8)
     ])
-    
+  
     //control stack
     NSLayoutConstraint.activate([
       controlStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
       controlStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
-      controlStack.topAnchor.constraint(equalTo: remainingTimeLabel.bottomAnchor, constant: 8)
+      controlStack.topAnchor.constraint(equalTo: albumName.bottomAnchor, constant: 15)
     ])
   }
   
@@ -289,7 +260,7 @@ final class MediaPlayer: UIView {
     }
     
     if timer == nil {
-      timer = Timer.scheduledTimer(timeInterval: 0.0001, target: self, selector: #selector(updateProgress(_:)), userInfo: nil, repeats: true)
+      timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateProgress(_:)), userInfo: nil, repeats: true)
     }
     
     songNameLabel.text = song.name
@@ -308,13 +279,14 @@ final class MediaPlayer: UIView {
   }
   
   func play() {
-    progressBar.value = 0.0
-    progressBar.maximumValue = Float(player.duration)
+    progressArc.value = 0.0
+    progressArc.maxValue = CGFloat(player.duration)
     player.play()
     setPlayPauseIcon(isPlaying: player.isPlaying)
   }
   
   func stop() {
+    print("stopped")
     player.stop()
     timer?.invalidate()
     timer = nil
@@ -326,14 +298,18 @@ final class MediaPlayer: UIView {
   }
   
   @objc private func updateProgress(_ sender: Timer) {
-    progressBar.value = Float(player.currentTime)
+    progressArc.value = CGFloat(player.currentTime)
     elapsedTimeLabel.text = getFormattedTime(timeInterval: player.currentTime)
     let remainingTime = player.duration - player.currentTime
     remainingTimeLabel.text = getFormattedTime(timeInterval: remainingTime)
+    print("updateProgress MediaPlayer: \(CGFloat(player.currentTime))")
+    
   }
   
-  @objc private func progressScrubbed(_ sender: ArcSlider) {
+  @objc private func progressScrubbed(_ sender: CircularSlider) {
     player.currentTime = Float64(sender.value)
+    print(progressArc.value)
+    print("progressScrubbed")
   }
   
   @objc private func didTapPrevious(_ sender: UIButton) {
@@ -350,6 +326,7 @@ final class MediaPlayer: UIView {
   @objc private func didTapPlayPause(_ sender: UIButton) {
     if player.isPlaying {
       player.pause()
+      player.stop()
     } else {
       player.play()
     }

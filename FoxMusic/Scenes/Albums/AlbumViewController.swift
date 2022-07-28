@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  AlbumViewController.swift
 //  MusicApp
 //
 //  Created by Ungurean Valentina on 11.07.2022.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class AlbumViewController: UIViewController {
 
   private let albums = Album.get()
   
@@ -48,7 +48,7 @@ class ViewController: UIViewController {
   }
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
+extension AlbumViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return albums.count
   }
