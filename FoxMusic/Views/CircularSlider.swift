@@ -21,20 +21,13 @@ struct CircularSliderOptions {
   var drawTrackingGradient: Bool = true
   var trackingFirstColor: UIColor = .systemRed
   var trackingSecondColor: UIColor = .systemYellow
-  
-//  case thumbImage(UIImage?)
-//  case maxValue(Float)
-//  case minValue(Float)
-//  case sliderEnabled(Bool)
-//  case viewInset(CGFloat)
-//  case minMaxSwitchTreshold(Float)
-//  case thumbPosition(Float)
-  
 }
 
 public class CircularSlider: UIControl {
   
   let options: CircularSliderOptions
+  private var pointerPosition: CGPoint = CGPoint()
+  private var canDrag = true
   
   private lazy var centerPoint: CGPoint = {
     let centerPoint = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
@@ -48,12 +41,12 @@ public class CircularSlider: UIControl {
   }()
   
   private lazy var startAngle: CGFloat = {
-    let startAngle = CGFloat.degreesToRadians(options.startAngleDegrees)
+    let startAngle = CGPoint.degreesToRadians(options.startAngleDegrees)
     return startAngle
   }()
   
   private lazy var endAngle: CGFloat = {
-    let endAngle = CGFloat.degreesToRadians(options.endAngleDegrees)
+    let endAngle = CGPoint.degreesToRadians(options.endAngleDegrees)
     return endAngle
   }()
   
@@ -66,7 +59,6 @@ public class CircularSlider: UIControl {
   var value: CGFloat = 0.0 {
     didSet {
       if let max = maxValue {
-        print("value: \(value)")
         progress = value / max
       }
     }
@@ -88,12 +80,6 @@ public class CircularSlider: UIControl {
       setNeedsDisplay()
     }
   }
-
-  private var pointerPosition: CGPoint = CGPoint()
-  // boolean which chooses if the knob can be dragged or not
-  var canDrag = true
-  // variable that stores the lenght of the arc based on the last touch
-  var oldLength : CGFloat = 30
   
   init(frame: CGRect, options: CircularSliderOptions) {
     self.options = options
@@ -109,71 +95,28 @@ public class CircularSlider: UIControl {
     if let firstTouch = touches.first {
       let hitView = self.hitTest(firstTouch.location(in: self), with: event)
       if hitView === self {
-        // distance of touch from pointer
-        let xDist = CGFloat(firstTouch.preciseLocation(in: hitView).x - pointerPosition.x)
-        let yDist = CGFloat(firstTouch.preciseLocation(in: hitView).y - pointerPosition.y)
-        let distance = CGFloat(sqrt((xDist * xDist) + (yDist * yDist)))
+        let distance = firstTouch.preciseLocation(in: hitView).distanceToPoint(otherPoint: pointerPosition)
         canDrag = true
         guard distance < 30 else { return canDrag = false }
       }
     }
   }
   
-  
-
   public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
     if let firstTouch = touches.first {
       let hitView = self.hitTest(firstTouch.location(in: self), with: event)
-      if hitView === self {
-//        if canDrag == true {
-          
-          // CONSTANTS TO BE USED
-//          let center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
-//          let radiusBounds = max(bounds.width, bounds.height)
-//          let radius = radiusBounds/2 - options.barWidth/2
-          let touchX = firstTouch.preciseLocation(in: hitView).x
-          let touchY = firstTouch.preciseLocation(in: hitView).y
-        
-        print("touchX: \(touchX)")
-        print("touchY: \(touchY)")
-          
-          // FIND THE NEAREST POINT TO THE CIRCLE FROM THE TOUCH POSITION
-          let dividendx = pow(touchX, 2) + pow(centerPoint.x, 2) - (2 * touchX * centerPoint.x)
-          let dividendy = pow(touchY, 2) + pow(centerPoint.y, 2) - (2 * touchY * centerPoint.y)
-          let dividend = sqrt(abs(dividendx) + abs(dividendy))
-          
-          // POINT(x, y) FOUND
-          let pointX = centerPoint.x + ((radius * (touchX - centerPoint.x)) / dividend)
-          let pointY = centerPoint.y + ((radius * (touchY - centerPoint.y)) / dividend)
-          
-          // ARC LENGTH
-          let arcAngle: CGFloat = (2 * .pi) + (.pi / 4) - (3 * .pi / 4)
-          let arcLength =  arcAngle * radius
-          
-          // NEW ARC LENGTH
-          let xForTheta = Double(pointX) - Double(centerPoint.x)
-          let yForTheta = Double(pointY) - Double(centerPoint.y)
-//          var theta : Double = atan2(yForTheta, xForTheta) - (3 * .pi / 4)
-          var theta : Double = (3 * .pi / 4) - atan2(yForTheta, xForTheta)
+      if hitView === self, canDrag == true {
 
-          if theta < 0 {
-            theta += 2 * .pi
-          }
-          let newArcLength = CGFloat(theta) * radius
-          
-          // CHECK CONDITIONS OF THE POINTER'S POSITION
-//          if 480.0 ... 550.0 ~= newArcLength { newArcLength = 480 }
-//          else if 550.0 ... 630.0 ~= newArcLength { newArcLength = 0 }
-//          if oldLength == 480 && 0 ... 465 ~= newArcLength  { newArcLength = 480 }
-//          else if oldLength == 0 && 15 ... 480 ~= newArcLength { newArcLength = 0 }
-          oldLength = newArcLength
-          
-          // PERCENTAGE TO BE ASSIGNED TO THE PROGRESS VAR
-          let newPercentage = newArcLength/arcLength
-//          progress = CGFloat(newPercentage)
-          value = CGFloat(newPercentage) * maxValue!
-          self.sendActions(for: .valueChanged)
-//        }
+        let touchPoint = firstTouch.preciseLocation(in: hitView)
+        let arcLength = endAngle * radius
+        let movePoint = CGPoint.closestPointOnCircle(center: centerPoint, point: touchPoint, radius: radius)
+
+        let startArcPoint = CGPoint(x: centerPoint.x - radius, y: centerPoint.y)
+        let angleInRadians = CGPoint.angleBetweenThreePoints(center: centerPoint, firstPoint: startArcPoint, secondPoint: movePoint)
+        let newArcLength = CGFloat(angleInRadians) * radius
+        let newPercentage = newArcLength/arcLength
+        value = CGFloat(newPercentage) * maxValue!
+        self.sendActions(for: .valueChanged)
       }
     }
   }
@@ -234,7 +177,6 @@ public class CircularSlider: UIControl {
     
     // set the position
     pointerPosition = CGPoint(x: thumbX, y: thumbY)
-//    print("pointerPosition : \(pointerPosition)")
   }
 }
 

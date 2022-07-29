@@ -221,13 +221,6 @@ final class MediaPlayer: UIView {
       remainingTimeLabel.bottomAnchor.constraint(equalTo: progressArc.centerYAnchor, constant: -15)
     ])
     
-    //progress bar
-//    NSLayoutConstraint.activate([
-//      progressBar.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-//      progressBar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-//      progressBar.topAnchor.constraint(equalTo: albumCover.bottomAnchor, constant: 8)
-//    ])
-    
     //artist name
     NSLayoutConstraint.activate([
       artistNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -260,7 +253,7 @@ final class MediaPlayer: UIView {
     }
     
     if timer == nil {
-      timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateProgress(_:)), userInfo: nil, repeats: true)
+      timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateProgress(_:)), userInfo: nil, repeats: true)
     }
     
     songNameLabel.text = song.name
@@ -286,7 +279,6 @@ final class MediaPlayer: UIView {
   }
   
   func stop() {
-    print("stopped")
     player.stop()
     timer?.invalidate()
     timer = nil
@@ -302,14 +294,10 @@ final class MediaPlayer: UIView {
     elapsedTimeLabel.text = getFormattedTime(timeInterval: player.currentTime)
     let remainingTime = player.duration - player.currentTime
     remainingTimeLabel.text = getFormattedTime(timeInterval: remainingTime)
-    print("updateProgress MediaPlayer: \(CGFloat(player.currentTime))")
-    
   }
   
   @objc private func progressScrubbed(_ sender: CircularSlider) {
     player.currentTime = Float64(sender.value)
-    print(progressArc.value)
-    print("progressScrubbed")
   }
   
   @objc private func didTapPrevious(_ sender: UIButton) {
@@ -371,6 +359,5 @@ extension UIImageView {
   func roundedImage() {
     self.layer.cornerRadius = (self.frame.size.width) / 2;
     self.clipsToBounds = true
-//    self.layer.masksToBounds = false
   }
 }
