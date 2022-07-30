@@ -28,12 +28,12 @@ extension CGPoint {
   static func angleBetweenThreePoints(center: CGPoint, firstPoint: CGPoint, secondPoint: CGPoint) -> CGFloat {
     let firstAngle = atan2(firstPoint.y - center.y, firstPoint.x - center.x)
     let secondAngle = atan2(secondPoint.y - center.y, secondPoint.x - center.x)
-    var radians = firstAngle - secondAngle
+    var radians = 2 * (firstAngle - secondAngle)
     while radians < 0 {
       radians += CGFloat(2 * Double.pi)
     }
     
-    return radians * 2
+    return radians
   }
 }
 

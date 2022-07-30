@@ -108,14 +108,17 @@ public class CircularSlider: UIControl {
       if hitView === self, canDrag == true {
 
         let touchPoint = firstTouch.preciseLocation(in: hitView)
-        let arcLength = endAngle * radius
-        let movePoint = CGPoint.closestPointOnCircle(center: centerPoint, point: touchPoint, radius: radius)
-
         let startArcPoint = CGPoint(x: centerPoint.x - radius, y: centerPoint.y)
-        let angleInRadians = CGPoint.angleBetweenThreePoints(center: centerPoint, firstPoint: startArcPoint, secondPoint: movePoint)
+        var angleInRadians = CGFloat(0.0)
+        if touchPoint.y > startArcPoint.y || touchPoint.x > centerPoint.x {
+          angleInRadians = CGPoint.angleBetweenThreePoints(center: centerPoint, firstPoint: startArcPoint, secondPoint: touchPoint)
+        }
+        
+        let arcLength = endAngle * radius
         let newArcLength = CGFloat(angleInRadians) * radius
         let newPercentage = newArcLength/arcLength
-        value = CGFloat(newPercentage) * maxValue!
+        let max = maxValue ?? value
+        value = CGFloat(newPercentage) * max
         self.sendActions(for: .valueChanged)
       }
     }
