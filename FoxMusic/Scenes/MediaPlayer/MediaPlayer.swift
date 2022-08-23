@@ -26,18 +26,15 @@ final class MediaPlayer: UIView {
   private lazy var albumCircle: UIImageView = {
     let width = UIScreen.main.bounds.width * 0.52
     let lineWidth = 1.0
-    let renderer = UIGraphicsImageRenderer(size: CGSize(width: width + 2, height: width + 2))
-    let image = renderer.image { ctx in
-      ctx.cgContext.setFillColor(UIColor.black.withAlphaComponent(0.0).cgColor)
-      ctx.cgContext.setStrokeColor(UIColor(named: "orange")?.cgColor ?? UIColor.systemOrange.cgColor)
-      ctx.cgContext.setLineWidth(lineWidth)
-      
-      let rectangle = CGRect(x: lineWidth, y: lineWidth, width: width, height: width)
-      ctx.cgContext.addEllipse(in: rectangle)
-      ctx.cgContext.drawPath(using: .fillStroke)
-    }
+    let view = UIImageView()
+    view.drawCircle(
+      size: CGSize(width: width + 2, height: width + 2),
+      fillColor: UIColor.black.withAlphaComponent(0.0).cgColor,
+      strokeColor: UIColor(named: "orange")?.cgColor ?? UIColor.systemOrange.cgColor,
+      lineWidth: lineWidth,
+      rectangle: CGRect(x: lineWidth, y: lineWidth, width: width, height: width),
+      mode: .fillStroke)
     
-    let view = UIImageView(image: image)
     view.translatesAutoresizingMaskIntoConstraints = false
     return view
   }()
@@ -45,18 +42,15 @@ final class MediaPlayer: UIView {
   private lazy var albumCircleCenter: UIImageView = {
     let width = 35.0
     let lineWidth = 12.0
-    let renderer = UIGraphicsImageRenderer(size: CGSize(width: width + lineWidth, height: width + lineWidth))
-    let image = renderer.image { ctx in
-      ctx.cgContext.setFillColor(UIColor.black.cgColor)
-      ctx.cgContext.setStrokeColor(UIColor(named: "orange")?.cgColor ?? UIColor.systemOrange.cgColor)
-      ctx.cgContext.setLineWidth(lineWidth)
-      
-      let rectangle = CGRect(x: 6, y: 6, width: width, height: width)
-      ctx.cgContext.addEllipse(in: rectangle)
-      ctx.cgContext.drawPath(using: .fillStroke)
-    }
+    let view = UIImageView()
+    view.drawCircle(
+      size: CGSize(width: width + lineWidth, height: width + lineWidth),
+      fillColor: UIColor.black.cgColor,
+      strokeColor: UIColor(named: "orange")?.cgColor ?? UIColor.systemOrange.cgColor,
+      lineWidth: lineWidth,
+      rectangle: CGRect(x: 6, y: 6, width: width, height: width),
+      mode: .fillStroke)
     
-    let view = UIImageView(image: image)
     view.translatesAutoresizingMaskIntoConstraints = false
     return view
   }()

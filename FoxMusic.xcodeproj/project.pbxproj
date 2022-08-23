@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		A78CB380288FF97E00A2AAB8 /* CircularSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78CB37F288FF97E00A2AAB8 /* CircularSlider.swift */; };
-		A78CB382289084BF00A2AAB8 /* UIView+GradientOnPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78CB381289084BF00A2AAB8 /* UIView+GradientOnPath.swift */; };
 		A7CE004628800F610014B37C /* love.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A7CE003828800F610014B37C /* love.mp3 */; };
 		A7CE004728800F610014B37C /* jazzyfrenchy.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A7CE003928800F610014B37C /* jazzyfrenchy.mp3 */; };
 		A7CE004828800F610014B37C /* hipjazz.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A7CE003A28800F610014B37C /* hipjazz.mp3 */; };
@@ -67,11 +66,12 @@
 		A7CEFFC3287EBCCE0014B37C /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CEFF8E287EBCCE0014B37C /* AlbumViewController.swift */; };
 		A7CEFFC4287EBCCE0014B37C /* MusicPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CEFF8F287EBCCE0014B37C /* MusicPlayerViewController.swift */; };
 		A7F879F42894254900673941 /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F879F32894254900673941 /* CGPoint+Extension.swift */; };
+		A7F879F82897E97100673941 /* UIImageView+drawCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F879F72897E97100673941 /* UIImageView+drawCircle.swift */; };
+		A7F879FA2897EBD200673941 /* UIView+GradientOnPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F879F92897EBD200673941 /* UIView+GradientOnPath.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A78CB37F288FF97E00A2AAB8 /* CircularSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularSlider.swift; sourceTree = "<group>"; };
-		A78CB381289084BF00A2AAB8 /* UIView+GradientOnPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+GradientOnPath.swift"; sourceTree = "<group>"; };
 		A7CE003828800F610014B37C /* love.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = love.mp3; sourceTree = "<group>"; };
 		A7CE003928800F610014B37C /* jazzyfrenchy.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = jazzyfrenchy.mp3; sourceTree = "<group>"; };
 		A7CE003A28800F610014B37C /* hipjazz.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = hipjazz.mp3; sourceTree = "<group>"; };
@@ -132,6 +132,8 @@
 		A7CEFF8E287EBCCE0014B37C /* AlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
 		A7CEFF8F287EBCCE0014B37C /* MusicPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicPlayerViewController.swift; sourceTree = "<group>"; };
 		A7F879F32894254900673941 /* CGPoint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
+		A7F879F72897E97100673941 /* UIImageView+drawCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+drawCircle.swift"; sourceTree = "<group>"; };
+		A7F879F92897EBD200673941 /* UIView+GradientOnPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+GradientOnPath.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,7 +290,8 @@
 			children = (
 				A7F879F32894254900673941 /* CGPoint+Extension.swift */,
 				A78CB37F288FF97E00A2AAB8 /* CircularSlider.swift */,
-				A78CB381289084BF00A2AAB8 /* UIView+GradientOnPath.swift */,
+				A7F879F72897E97100673941 /* UIImageView+drawCircle.swift */,
+				A7F879F92897EBD200673941 /* UIView+GradientOnPath.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -410,9 +413,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A78CB382289084BF00A2AAB8 /* UIView+GradientOnPath.swift in Sources */,
 				A7CEFFA2287EBCCE0014B37C /* Song.swift in Sources */,
 				A7CEFFC2287EBCCE0014B37C /* MediaPlayer.swift in Sources */,
+				A7F879FA2897EBD200673941 /* UIView+GradientOnPath.swift in Sources */,
 				A78CB380288FF97E00A2AAB8 /* CircularSlider.swift in Sources */,
 				A7CEFF55287EBC3D0014B37C /* AppDelegate.swift in Sources */,
 				A7CEFF57287EBC3D0014B37C /* SceneDelegate.swift in Sources */,
@@ -420,6 +423,7 @@
 				A7CEFFC3287EBCCE0014B37C /* AlbumViewController.swift in Sources */,
 				A7CEFFC4287EBCCE0014B37C /* MusicPlayerViewController.swift in Sources */,
 				A7CEFFC1287EBCCE0014B37C /* AlbumTableViewCell.swift in Sources */,
+				A7F879F82897E97100673941 /* UIImageView+drawCircle.swift in Sources */,
 				A7F879F42894254900673941 /* CGPoint+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -573,6 +577,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -601,6 +606,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

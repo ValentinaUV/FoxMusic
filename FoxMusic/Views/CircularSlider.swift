@@ -8,8 +8,14 @@
 import UIKit
 
 struct CircularSliderOptions {
-  var startAngleDegrees: Double = 180.0
-  var endAngleDegrees: Double = 360.0
+  /**
+   The angle between 0 degree point and start point of the arc
+   */
+  var startAngleDegrees: CGFloat = 180.0
+  /**
+   The angle between 0 degree point and end point of the arc
+   */
+  var endAngleDegrees: CGFloat = 0.0
   var barWidth: CGFloat = 5.0
   var trackingWidth: CGFloat = 5.0
   var barColor: UIColor = .darkGray
@@ -50,11 +56,24 @@ public class CircularSlider: UIControl {
     return endAngle
   }()
   
-  private lazy var outlineEndAngle: CGFloat = {
-    let angleDiff: CGFloat = 2 * .pi + startAngle - endAngle
-    let outlineEndAngle = startAngle - angleDiff * CGFloat(progress)
-    return outlineEndAngle
-  }()
+  /**
+   The angle between 0 degree point and moved thumb point on the arc
+   */
+  private lazy var thumbAngle: CGFloat = startAngle
+  private func updateThumbAngle() {
+    var angleDiff: CGFloat = startAngle - endAngle
+    if options.clockwise {
+      if angleDiff > 0 {
+        angleDiff -= 2 * .pi
+      }
+    } else {
+      if angleDiff < 0 {
+        angleDiff += 2 * .pi
+      }
+    }
+
+    thumbAngle = startAngle - angleDiff * CGFloat(progress)
+  }
   
   var value: CGFloat = 0.0 {
     didSet {
@@ -76,7 +95,7 @@ public class CircularSlider: UIControl {
         // clamp: if progress is over 1 or less than 0 give it a value between them
         progress = max(0, min(1, progress))
       }
-      updateOutlineEndAngle()
+      updateThumbAngle()
       setNeedsDisplay()
     }
   }
@@ -106,19 +125,22 @@ public class CircularSlider: UIControl {
     if let firstTouch = touches.first {
       let hitView = self.hitTest(firstTouch.location(in: self), with: event)
       if hitView === self, canDrag == true {
-
         let touchPoint = firstTouch.preciseLocation(in: hitView)
-        let startArcPoint = CGPoint(x: centerPoint.x - radius, y: centerPoint.y)
-        var angleInRadians = CGFloat(0.0)
-        if touchPoint.y > startArcPoint.y || touchPoint.x > centerPoint.x {
-          angleInRadians = CGPoint.angleBetweenThreePoints(center: centerPoint, firstPoint: startArcPoint, secondPoint: touchPoint)
-        }
+        let startArcPoint = CGPoint.pointOnCircle(center: centerPoint, radius: radius, angle: startAngle)
+        let endArcPoint = CGPoint.pointOnCircle(center: centerPoint, radius: radius, angle: endAngle)
         
-        let arcLength = endAngle * radius
-        let newArcLength = CGFloat(angleInRadians) * radius
+        let arcAngleInRadians = CGPoint.angleBetweenThreePoints(center: centerPoint, firstPoint: startArcPoint, secondPoint: endArcPoint, clockwise: options.clockwise)
+        let arcLength = CGPoint.arcLength(radius: radius, angleInRadians: arcAngleInRadians)
+        
+        let newAngleInRadians = CGPoint.angleBetweenThreePoints(center: centerPoint, firstPoint: startArcPoint, secondPoint: touchPoint, clockwise: options.clockwise)
+        var newArcLength = CGPoint.arcLength(radius: radius, angleInRadians: newAngleInRadians)
+
+        if newArcLength >= arcLength {
+          newArcLength = arcLength
+        }
         let newPercentage = newArcLength/arcLength
         let max = maxValue ?? value
-        value = CGFloat(newPercentage) * max
+        value = newPercentage * max
         self.sendActions(for: .valueChanged)
       }
     }
@@ -132,7 +154,7 @@ public class CircularSlider: UIControl {
       lineWidth: options.barWidth)
     
     let trackingPath = drawPath(
-      endAngle: outlineEndAngle,
+      endAngle: thumbAngle,
       color: options.trackingColor,
       lineWidth: options.trackingWidth)
 
@@ -160,11 +182,6 @@ public class CircularSlider: UIControl {
     path.stroke()
     
     return path
-  }
-  
-  private func updateOutlineEndAngle() {
-    let angleDiff: CGFloat = 2 * .pi + startAngle - endAngle
-    outlineEndAngle = startAngle - angleDiff * CGFloat(progress)
   }
   
   private func drawThumb(trackingPath: UIBezierPath) {
