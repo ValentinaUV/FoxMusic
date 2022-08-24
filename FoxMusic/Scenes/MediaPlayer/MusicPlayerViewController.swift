@@ -31,6 +31,7 @@ final class MusicPlayerViewController: UIViewController {
   }
   
   private func setupView() {
+    title = Constants.playerScreen.title
     addBlurredView()
     view.addSubview(mediaPlayer)
     setupConstraints()

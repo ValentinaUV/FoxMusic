@@ -33,7 +33,7 @@ class AlbumViewController: UIViewController {
   }
   
   private func setupView() {
-    title = "My Music Player"
+    title = Constants.albumsScreen.title
     view.addSubview(tableView)
     setupConstraints()
   }
@@ -66,6 +66,9 @@ extension AlbumViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let vc = MusicPlayerViewController(album: albums[indexPath.row])
     tableView.deselectRow(at: indexPath, animated: true)
+    let backButton = UIBarButtonItem()
+    backButton.title = Constants.playerScreen.backButtonTitle
+    navigationItem.backBarButtonItem = backButton
     show(vc, sender: self)
   }
 }
