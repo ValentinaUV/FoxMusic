@@ -113,7 +113,7 @@ final class MediaPlayer: UIView {
     let view = UIButton()
     view.translatesAutoresizingMaskIntoConstraints = false
     let config = UIImage.SymbolConfiguration(pointSize: 30)
-    view.setImage(UIImage.init(systemName: "backward.end.fill", withConfiguration: config), for: .normal)
+    view.setImage(UIImage.init(systemName: "backward", withConfiguration: config), for: .normal)
     view.addTarget(self, action: #selector(didTapPrevious(_:)), for: .touchUpInside)
     view.tintColor = .white
     return view
@@ -122,8 +122,8 @@ final class MediaPlayer: UIView {
   private lazy var playPauseButton: UIButton = {
     let view = UIButton()
     view.translatesAutoresizingMaskIntoConstraints = false
-    let config = UIImage.SymbolConfiguration(pointSize: 100)
-    view.setImage(UIImage.init(systemName: "play.circle.fill", withConfiguration: config), for: .normal)
+    let config = UIImage.SymbolConfiguration(pointSize: 60)
+    view.setImage(UIImage.init(systemName: "play", withConfiguration: config), for: .normal)
     view.addTarget(self, action: #selector(didTapPlayPause(_:)), for: .touchUpInside)
     view.tintColor = .white
     return view
@@ -133,7 +133,7 @@ final class MediaPlayer: UIView {
     let view = UIButton()
     view.translatesAutoresizingMaskIntoConstraints = false
     let config = UIImage.SymbolConfiguration(pointSize: 30)
-    view.setImage(UIImage.init(systemName: "forward.end.fill", withConfiguration: config), for: .normal)
+    view.setImage(UIImage.init(systemName: "forward", withConfiguration: config), for: .normal)
     view.addTarget(self, action: #selector(didTapNext(_:)), for: .touchUpInside)
     view.tintColor = .white
     return view
@@ -235,9 +235,9 @@ final class MediaPlayer: UIView {
   
     //control stack
     NSLayoutConstraint.activate([
-      controlStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
-      controlStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32),
-      controlStack.topAnchor.constraint(equalTo: albumName.bottomAnchor, constant: 15)
+      controlStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 70),
+      controlStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -70),
+      controlStack.topAnchor.constraint(equalTo: albumName.bottomAnchor, constant: 20)
     ])
   }
   
@@ -279,8 +279,8 @@ final class MediaPlayer: UIView {
   }
   
   private func setPlayPauseIcon(isPlaying: Bool) {
-    let config = UIImage.SymbolConfiguration(pointSize: 100)
-    playPauseButton.setImage(UIImage(systemName: isPlaying ? "pause.circle.fill" : "play.circle.fill", withConfiguration: config), for: .normal)
+    let config = UIImage.SymbolConfiguration(pointSize: 60)
+    playPauseButton.setImage(UIImage(systemName: isPlaying ? "pause" : "play", withConfiguration: config), for: .normal)
   }
   
   @objc private func updateProgress(_ sender: Timer) {
