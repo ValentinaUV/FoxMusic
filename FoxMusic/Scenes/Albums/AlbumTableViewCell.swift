@@ -11,9 +11,9 @@ final class AlbumTableViewCell: UITableViewCell {
   var album: Album? {
     didSet {
       if let album = album {
-        albumCover.image = UIImage(named: album.image)
-        albumName.text = album.name
-        songsCount.text = "\(album.songs.count) Songs"
+        albumCover.image = UIImage(named: album.getImage())
+        albumName.text = album.getName()
+        songsCount.text = "\(album.getSongsCount()) Songs"
       }
     }
   }

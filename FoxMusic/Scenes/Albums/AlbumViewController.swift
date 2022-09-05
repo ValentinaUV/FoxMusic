@@ -9,8 +9,8 @@ import UIKit
 
 class AlbumViewController: UIViewController {
 
-  private let albums = Album.get()
-  
+  var viewModel: AlbumViewModel!
+    
   private lazy var tableView: UITableView = {
     let table = UITableView()
     table.translatesAutoresizingMaskIntoConstraints = false
@@ -50,7 +50,7 @@ class AlbumViewController: UIViewController {
 
 extension AlbumViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return albums.count
+      return viewModel?.getAlbumsCount() ?? 0
   }
   
   public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -58,13 +58,16 @@ extension AlbumViewController: UITableViewDelegate, UITableViewDataSource {
     else {
       return UITableViewCell()
     }
-    cell.album = albums[indexPath.row]
-    cell.textLabel?.text = albums[indexPath.row].name
+      let album = viewModel?.getAlbum(index: indexPath.row)
+      cell.album = album
+      cell.textLabel?.text = album?.getName()
     return cell
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let vc = MusicPlayerViewController(album: albums[indexPath.row])
+    
+    guard let album = viewModel?.getAlbum(index: indexPath.row) else {return}
+    let vc = MusicPlayerViewController(album: album)
     tableView.deselectRow(at: indexPath, animated: true)
     let backButton = UIBarButtonItem()
     backButton.title = Constants.playerScreen.backButtonTitle

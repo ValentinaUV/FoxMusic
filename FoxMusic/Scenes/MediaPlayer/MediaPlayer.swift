@@ -163,10 +163,10 @@ final class MediaPlayer: UIView {
   }
   
   private func setupView() {
-    albumName.text = album.name
-    albumCover.image = UIImage(named: album.image)
+    albumName.text = album.getName()
+    albumCover.image = UIImage(named: album.getImage())
     backgroundColor = UIColor(named: "darkColor")
-    setupPlayer(song: album.songs[playingIndex])
+    setupPlayer(song: album.getSong(index: playingIndex))
     [albumName, albumCover, albumCircle, albumCircleCenter, songNameLabel, artistNameLabel, progressArc, elapsedTimeLabel, remainingTimeLabel, controlStack].forEach { v in
       addSubview(v)
     }
@@ -242,7 +242,7 @@ final class MediaPlayer: UIView {
   }
   
   private func setupPlayer(song: Song) {
-    guard let url = Bundle.main.url(forResource: song.fileName, withExtension: "mp3") else {
+    guard let url = Bundle.main.url(forResource: song.getFileName(), withExtension: song.getFileExtension()) else {
       return
     }
     
@@ -250,8 +250,8 @@ final class MediaPlayer: UIView {
       timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateProgress(_:)), userInfo: nil, repeats: true)
     }
     
-    songNameLabel.text = song.name
-    artistNameLabel.text = song.artist
+    songNameLabel.text = song.getName()
+    artistNameLabel.text = song.getArtist()
     
     do {
       player = try AVAudioPlayer(contentsOf: url)
@@ -297,10 +297,10 @@ final class MediaPlayer: UIView {
   @objc private func didTapPrevious(_ sender: UIButton) {
     playingIndex -= 1
     if playingIndex < 0 {
-      playingIndex = album.songs.count - 1
+      playingIndex = album.getSongsCount() - 1
     }
     
-    setupPlayer(song: album.songs[playingIndex])
+    setupPlayer(song: album.getSong(index: playingIndex))
     play()
     setPlayPauseIcon(isPlaying: player.isPlaying)
   }
@@ -318,11 +318,11 @@ final class MediaPlayer: UIView {
   
   @objc private func didTapNext(_ sender: UIButton) {
     playingIndex += 1
-    if playingIndex >= album.songs.count {
+    if playingIndex >= album.getSongsCount() {
       playingIndex = 0
     }
     
-    setupPlayer(song: album.songs[playingIndex])
+    setupPlayer(song: album.getSong(index: playingIndex))
     play()
     setPlayPauseIcon(isPlaying: player.isPlaying)
   }

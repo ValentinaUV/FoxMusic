@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D489FAB28BF76C400FEA7B6 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D489FAA28BF76C400FEA7B6 /* AlbumViewModel.swift */; };
 		A7845AC228B5083D00E26C89 /* ThemeConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7845AC128B5083D00E26C89 /* ThemeConfigurator.swift */; };
 		A7845AC528B609DE00E26C89 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7845AC428B609DE00E26C89 /* Constants.swift */; };
 		A78CB380288FF97E00A2AAB8 /* CircularSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78CB37F288FF97E00A2AAB8 /* CircularSlider.swift */; };
@@ -73,6 +74,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7D489FAA28BF76C400FEA7B6 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		A7845AC128B5083D00E26C89 /* ThemeConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeConfigurator.swift; sourceTree = "<group>"; };
 		A7845AC428B609DE00E26C89 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A78CB37F288FF97E00A2AAB8 /* CircularSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularSlider.swift; sourceTree = "<group>"; };
@@ -180,8 +182,10 @@
 		A78CB3872891138C00A2AAB8 /* Albums */ = {
 			isa = PBXGroup;
 			children = (
+				A7CEFF6A287EBCCE0014B37C /* Album.swift */,
 				A7CEFF8E287EBCCE0014B37C /* AlbumViewController.swift */,
 				A7CEFF8B287EBCCE0014B37C /* AlbumTableViewCell.swift */,
+				7D489FAA28BF76C400FEA7B6 /* AlbumViewModel.swift */,
 			);
 			path = Albums;
 			sourceTree = "<group>";
@@ -293,7 +297,6 @@
 			isa = PBXGroup;
 			children = (
 				A7CEFF69287EBCCE0014B37C /* Song.swift */,
-				A7CEFF6A287EBCCE0014B37C /* Album.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -430,6 +433,7 @@
 				A7CEFFA2287EBCCE0014B37C /* Song.swift in Sources */,
 				A7CEFFC2287EBCCE0014B37C /* MediaPlayer.swift in Sources */,
 				A7F879FA2897EBD200673941 /* UIView+GradientOnPath.swift in Sources */,
+				7D489FAB28BF76C400FEA7B6 /* AlbumViewModel.swift in Sources */,
 				A78CB380288FF97E00A2AAB8 /* CircularSlider.swift in Sources */,
 				A7CEFF55287EBC3D0014B37C /* AppDelegate.swift in Sources */,
 				A7845AC228B5083D00E26C89 /* ThemeConfigurator.swift in Sources */,
