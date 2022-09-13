@@ -9,10 +9,12 @@ import Foundation
 
 struct Song {
   private var name: String
-  private var image: String
+  private var image: String?
+  private var imageUrl: URL?
   private var artist: String
-  private var fileName: String
+  private var fileName: String?
   private var fileExtension = "mp3"
+  private var url: URL?
   
   init(name: String, image: String, artist: String, fileName: String, fileExtension: String?) {
     self.name = name
@@ -24,12 +26,19 @@ struct Song {
     }
   }
   
+  init(name: String, imageUrl: URL?, artist: String, url: URL) {
+    self.name = name
+    self.imageUrl = imageUrl
+    self.artist = artist
+    self.url = url
+  }
+  
   func getName() -> String {
     return name
   }
   
   func getImage() -> String {
-    return image
+    return image ?? ""
   }
   
   func getArtist() -> String {
@@ -37,7 +46,7 @@ struct Song {
   }
   
   func getFileName() -> String {
-    return fileName
+    return fileName ?? ""
   }
   
   func getFileExtension() -> String {

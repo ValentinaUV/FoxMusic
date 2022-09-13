@@ -12,6 +12,12 @@ struct Album {
   private var image: String
   private var songs: [Song]
     
+  init(name: String, image: String, songs: [Song]) {
+    self.name = name
+    self.image = image
+    self.songs = songs
+  }
+  
   func getName() -> String {
     return name
   }
@@ -27,10 +33,6 @@ struct Album {
   func getSong(index: Int) -> Song {
     return songs[index]
   }
-}
-
-extension Album {
-    
 }
 
 extension Album {

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7D489FAB28BF76C400FEA7B6 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D489FAA28BF76C400FEA7B6 /* AlbumViewModel.swift */; };
+		7D489FAD28C73F5B00FEA7B6 /* MusicStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D489FAC28C73F5B00FEA7B6 /* MusicStorage.swift */; };
+		7D489FAF28C8786D00FEA7B6 /* AppleMusicURLComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D489FAE28C8786D00FEA7B6 /* AppleMusicURLComponents.swift */; };
 		A7845AC228B5083D00E26C89 /* ThemeConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7845AC128B5083D00E26C89 /* ThemeConfigurator.swift */; };
 		A7845AC528B609DE00E26C89 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7845AC428B609DE00E26C89 /* Constants.swift */; };
 		A78CB380288FF97E00A2AAB8 /* CircularSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78CB37F288FF97E00A2AAB8 /* CircularSlider.swift */; };
@@ -75,6 +77,8 @@
 
 /* Begin PBXFileReference section */
 		7D489FAA28BF76C400FEA7B6 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
+		7D489FAC28C73F5B00FEA7B6 /* MusicStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicStorage.swift; sourceTree = "<group>"; };
+		7D489FAE28C8786D00FEA7B6 /* AppleMusicURLComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicURLComponents.swift; sourceTree = "<group>"; };
 		A7845AC128B5083D00E26C89 /* ThemeConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeConfigurator.swift; sourceTree = "<group>"; };
 		A7845AC428B609DE00E26C89 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A78CB37F288FF97E00A2AAB8 /* CircularSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularSlider.swift; sourceTree = "<group>"; };
@@ -289,6 +293,8 @@
 				A7CEFF5D287EBC3F0014B37C /* Assets.xcassets */,
 				A7CEFF5F287EBC3F0014B37C /* LaunchScreen.storyboard */,
 				A7CEFF62287EBC3F0014B37C /* Info.plist */,
+				7D489FAC28C73F5B00FEA7B6 /* MusicStorage.swift */,
+				7D489FAE28C8786D00FEA7B6 /* AppleMusicURLComponents.swift */,
 			);
 			path = FoxMusic;
 			sourceTree = "<group>";
@@ -433,6 +439,7 @@
 				A7CEFFA2287EBCCE0014B37C /* Song.swift in Sources */,
 				A7CEFFC2287EBCCE0014B37C /* MediaPlayer.swift in Sources */,
 				A7F879FA2897EBD200673941 /* UIView+GradientOnPath.swift in Sources */,
+				7D489FAD28C73F5B00FEA7B6 /* MusicStorage.swift in Sources */,
 				7D489FAB28BF76C400FEA7B6 /* AlbumViewModel.swift in Sources */,
 				A78CB380288FF97E00A2AAB8 /* CircularSlider.swift in Sources */,
 				A7CEFF55287EBC3D0014B37C /* AppDelegate.swift in Sources */,
@@ -445,6 +452,7 @@
 				A7845AC528B609DE00E26C89 /* Constants.swift in Sources */,
 				A7F879F82897E97100673941 /* UIImageView+drawCircle.swift in Sources */,
 				A7F879F42894254900673941 /* CGPoint+Extension.swift in Sources */,
+				7D489FAF28C8786D00FEA7B6 /* AppleMusicURLComponents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
