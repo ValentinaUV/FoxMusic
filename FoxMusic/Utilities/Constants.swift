@@ -13,6 +13,10 @@ struct Constants {
     static let title = "My Music Player"
   }
   
+  struct genresScreen {
+    static let title = "Genres"
+  }
+  
   struct playerScreen {
     static let title = "NOW PLAYING"
     static let backButtonTitle = ""

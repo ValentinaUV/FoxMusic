@@ -8,16 +8,16 @@
 import UIKit
 
 final class MusicPlayerViewController: UIViewController {
-  var album: Album
+  var musicCollection: MusicCollection
   
   private lazy var mediaPlayer: MediaPlayer = {
-    let player = MediaPlayer(album: album)
+    let player = MediaPlayer(musicCollection: musicCollection)
     player.translatesAutoresizingMaskIntoConstraints = false
     return player
   }()
   
-  init(album: Album) {
-    self.album = album
+  init(musicCollection: MusicCollection) {
+    self.musicCollection = musicCollection
     super.init(nibName: nil, bundle: nil)
   }
   

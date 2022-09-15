@@ -18,8 +18,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
     guard let windowScene = (scene as? UIWindowScene) else { return }
     window = UIWindow(windowScene: windowScene)
-    let controller = AlbumViewController()
-    controller.viewModel = AlbumViewModel()
+    let controller = GenreViewController()
+    controller.viewModel = GenreViewModel()
     window?.rootViewController = UINavigationController(rootViewController: controller)
     window?.makeKeyAndVisible()
   }

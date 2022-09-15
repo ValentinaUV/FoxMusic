@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D34709028D2D8FB00616560 /* GenreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D34708F28D2D8FB00616560 /* GenreViewController.swift */; };
+		7D34709328D2DB5D00616560 /* MusicCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D34709228D2DB5D00616560 /* MusicCollection.swift */; };
+		7D34709528D2DBA000616560 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D34709428D2DBA000616560 /* Genre.swift */; };
+		7D34709728D2DF4500616560 /* GenreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D34709628D2DF4500616560 /* GenreTableViewCell.swift */; };
+		7D34709928D2E05D00616560 /* GenreViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D34709828D2E05D00616560 /* GenreViewModel.swift */; };
 		7D489FAB28BF76C400FEA7B6 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D489FAA28BF76C400FEA7B6 /* AlbumViewModel.swift */; };
 		7D489FAD28C73F5B00FEA7B6 /* MusicStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D489FAC28C73F5B00FEA7B6 /* MusicStorage.swift */; };
 		7D489FAF28C8786D00FEA7B6 /* AppleMusicURLComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D489FAE28C8786D00FEA7B6 /* AppleMusicURLComponents.swift */; };
@@ -76,6 +81,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7D34708F28D2D8FB00616560 /* GenreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreViewController.swift; sourceTree = "<group>"; };
+		7D34709228D2DB5D00616560 /* MusicCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicCollection.swift; sourceTree = "<group>"; };
+		7D34709428D2DBA000616560 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
+		7D34709628D2DF4500616560 /* GenreTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreTableViewCell.swift; sourceTree = "<group>"; };
+		7D34709828D2E05D00616560 /* GenreViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreViewModel.swift; sourceTree = "<group>"; };
 		7D489FAA28BF76C400FEA7B6 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		7D489FAC28C73F5B00FEA7B6 /* MusicStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicStorage.swift; sourceTree = "<group>"; };
 		7D489FAE28C8786D00FEA7B6 /* AppleMusicURLComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicURLComponents.swift; sourceTree = "<group>"; };
@@ -157,6 +167,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7D34709128D2DB3100616560 /* Genres */ = {
+			isa = PBXGroup;
+			children = (
+				7D34708F28D2D8FB00616560 /* GenreViewController.swift */,
+				7D34709628D2DF4500616560 /* GenreTableViewCell.swift */,
+				7D34709828D2E05D00616560 /* GenreViewModel.swift */,
+			);
+			path = Genres;
+			sourceTree = "<group>";
+		};
 		A7845AC328B609CA00E26C89 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +188,7 @@
 		A78CB3852891136E00A2AAB8 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				7D34709128D2DB3100616560 /* Genres */,
 				A78CB3872891138C00A2AAB8 /* Albums */,
 				A78CB3862891137900A2AAB8 /* MediaPlayer */,
 			);
@@ -186,7 +207,6 @@
 		A78CB3872891138C00A2AAB8 /* Albums */ = {
 			isa = PBXGroup;
 			children = (
-				A7CEFF6A287EBCCE0014B37C /* Album.swift */,
 				A7CEFF8E287EBCCE0014B37C /* AlbumViewController.swift */,
 				A7CEFF8B287EBCCE0014B37C /* AlbumTableViewCell.swift */,
 				7D489FAA28BF76C400FEA7B6 /* AlbumViewModel.swift */,
@@ -303,6 +323,9 @@
 			isa = PBXGroup;
 			children = (
 				A7CEFF69287EBCCE0014B37C /* Song.swift */,
+				A7CEFF6A287EBCCE0014B37C /* Album.swift */,
+				7D34709228D2DB5D00616560 /* MusicCollection.swift */,
+				7D34709428D2DBA000616560 /* Genre.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -441,8 +464,10 @@
 				A7F879FA2897EBD200673941 /* UIView+GradientOnPath.swift in Sources */,
 				7D489FAD28C73F5B00FEA7B6 /* MusicStorage.swift in Sources */,
 				7D489FAB28BF76C400FEA7B6 /* AlbumViewModel.swift in Sources */,
+				7D34709728D2DF4500616560 /* GenreTableViewCell.swift in Sources */,
 				A78CB380288FF97E00A2AAB8 /* CircularSlider.swift in Sources */,
 				A7CEFF55287EBC3D0014B37C /* AppDelegate.swift in Sources */,
+				7D34709328D2DB5D00616560 /* MusicCollection.swift in Sources */,
 				A7845AC228B5083D00E26C89 /* ThemeConfigurator.swift in Sources */,
 				A7CEFF57287EBC3D0014B37C /* SceneDelegate.swift in Sources */,
 				A7CEFFA3287EBCCE0014B37C /* Album.swift in Sources */,
@@ -450,9 +475,12 @@
 				A7CEFFC4287EBCCE0014B37C /* MusicPlayerViewController.swift in Sources */,
 				A7CEFFC1287EBCCE0014B37C /* AlbumTableViewCell.swift in Sources */,
 				A7845AC528B609DE00E26C89 /* Constants.swift in Sources */,
+				7D34709928D2E05D00616560 /* GenreViewModel.swift in Sources */,
 				A7F879F82897E97100673941 /* UIImageView+drawCircle.swift in Sources */,
 				A7F879F42894254900673941 /* CGPoint+Extension.swift in Sources */,
+				7D34709028D2D8FB00616560 /* GenreViewController.swift in Sources */,
 				7D489FAF28C8786D00FEA7B6 /* AppleMusicURLComponents.swift in Sources */,
+				7D34709528D2DBA000616560 /* Genre.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -602,12 +630,14 @@
 				DEVELOPMENT_TEAM = 99HLL2MZ5J;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FoxMusic/Info.plist;
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "This app requires Apple Music library access to play music tracks.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -631,12 +661,14 @@
 				DEVELOPMENT_TEAM = 99HLL2MZ5J;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FoxMusic/Info.plist;
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "This app requires Apple Music library access to play music tracks.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

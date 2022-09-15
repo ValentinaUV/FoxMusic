@@ -1,22 +1,22 @@
 //
-//  AlbumViewController.swift
+//  GenreViewController.swift
 //  FoxMusic
 //
-//  Created by Ungurean Valentina on 11.07.2022.
+//  Created by Valentina Ungurean on 15.09.2022.
 //
 
 import UIKit
 
-class AlbumViewController: UIViewController {
+class GenreViewController: UIViewController {
 
-  var viewModel: AlbumViewModel!
+  var viewModel: GenreViewModel!
     
   private lazy var tableView: UITableView = {
     let table = UITableView()
     table.translatesAutoresizingMaskIntoConstraints = false
     table.delegate = self
     table.dataSource = self
-    table.register(AlbumTableViewCell.self, forCellReuseIdentifier: "cell")
+    table.register(GenreTableViewCell.self, forCellReuseIdentifier: "cell")
     table.estimatedRowHeight = 132
     table.rowHeight = UITableView.automaticDimension
     table.backgroundColor = UIColor(named: "blue")
@@ -30,10 +30,17 @@ class AlbumViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupView()
+    
+    viewModel?.genresLoaded = {
+      DispatchQueue.main.async {
+        self.tableView.reloadData()
+      }
+    }
+    
   }
   
   private func setupView() {
-    title = Constants.albumsScreen.title
+    title = Constants.genresScreen.title
     view.addSubview(tableView)
     setupConstraints()
   }
@@ -48,30 +55,32 @@ class AlbumViewController: UIViewController {
   }
 }
 
-extension AlbumViewController: UITableViewDelegate, UITableViewDataSource {
+extension GenreViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return viewModel?.getAlbumsCount() ?? 0
+      return viewModel?.getGenresCount() ?? 0
   }
   
   public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? AlbumTableViewCell
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? GenreTableViewCell
     else {
       return UITableViewCell()
     }
-      let album = viewModel?.getAlbum(index: indexPath.row)
-      cell.album = album
-      cell.textLabel?.text = album?.getName()
+      let genre = viewModel?.getGenre(index: indexPath.row)
+      cell.genre = genre
+//      cell.textLabel?.text = genre?.getName()
     return cell
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    guard let album = viewModel?.getAlbum(index: indexPath.row) else {return}
-    let vc = MusicPlayerViewController(musicCollection: album)
-    tableView.deselectRow(at: indexPath, animated: true)
-    let backButton = UIBarButtonItem()
-    backButton.title = Constants.playerScreen.backButtonTitle
-    navigationItem.backBarButtonItem = backButton
-    show(vc, sender: self)
+//    guard let genre = viewModel?.getGenre(index: indexPath.row) else {return}
+//
+//    let vc = MusicPlayerViewController(musicCollection: musicCollection)
+//    tableView.deselectRow(at: indexPath, animated: true)
+//    let backButton = UIBarButtonItem()
+//    backButton.title = Constants.playerScreen.backButtonTitle
+//    navigationItem.backBarButtonItem = backButton
+//    show(vc, sender: self)
   }
 }
+

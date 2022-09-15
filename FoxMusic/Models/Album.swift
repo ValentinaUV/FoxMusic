@@ -7,11 +7,16 @@
 
 import Foundation
 
-struct Album {
+struct Album: MusicCollection {
   private var name: String
-  private var image: String
+  private var image: String!
   private var songs: [Song]
     
+  init(name: String, songs: [Song]) {
+    self.name = name
+    self.songs = songs
+  }
+  
   init(name: String, image: String, songs: [Song]) {
     self.name = name
     self.image = image

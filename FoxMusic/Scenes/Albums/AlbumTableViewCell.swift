@@ -1,6 +1,6 @@
 //
 //  AlbumTableViewCell.swift
-//  MusicApp
+//  FoxMusic
 //
 //  Created by Ungurean Valentina on 11.07.2022.
 //

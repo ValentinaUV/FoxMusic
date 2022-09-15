@@ -10,9 +10,9 @@ import AVKit
 
 final class MediaPlayer: UIView {
   
-  var album: Album
+  var musicCollection: MusicCollection
   
-  private lazy var albumCover: UIImageView = {
+  private lazy var cover: UIImageView = {
     let width = UIScreen.main.bounds.width * 0.66
     let view = UIImageView(frame: CGRect(x: 0, y: 0, width: width, height: width))
     view.translatesAutoresizingMaskIntoConstraints = false
@@ -23,7 +23,7 @@ final class MediaPlayer: UIView {
     return view
   }()
   
-  private lazy var albumCircle: UIImageView = {
+  private lazy var coverCircle: UIImageView = {
     let width = UIScreen.main.bounds.width * 0.52
     let lineWidth = 1.0
     let view = UIImageView()
@@ -39,7 +39,7 @@ final class MediaPlayer: UIView {
     return view
   }()
   
-  private lazy var albumCircleCenter: UIImageView = {
+  private lazy var coverCircleCenter: UIImageView = {
     let width = 35.0
     let lineWidth = 12.0
     let view = UIImageView()
@@ -101,7 +101,7 @@ final class MediaPlayer: UIView {
     return view
   }()
   
-  private lazy var albumName: UILabel = {
+  private lazy var collectionName: UILabel = {
     let view = UILabel()
     view.translatesAutoresizingMaskIntoConstraints = false
     view.font = .systemFont(ofSize: 16)
@@ -152,8 +152,8 @@ final class MediaPlayer: UIView {
   private var timer: Timer?
   private var playingIndex = 0
   
-  init(album: Album) {
-    self.album = album
+  init(musicCollection: MusicCollection) {
+    self.musicCollection = musicCollection
     super.init(frame: .zero)
     setupView()
   }
@@ -163,11 +163,13 @@ final class MediaPlayer: UIView {
   }
   
   private func setupView() {
-    albumName.text = album.getName()
-    albumCover.image = UIImage(named: album.getImage())
+    collectionName.text = musicCollection.getName()
+    
+    //here should be song's image
+//    cover.image = UIImage(named: musicCollection.getImage())
     backgroundColor = UIColor(named: "darkColor")
-    setupPlayer(song: album.getSong(index: playingIndex))
-    [albumName, albumCover, albumCircle, albumCircleCenter, songNameLabel, artistNameLabel, progressArc, elapsedTimeLabel, remainingTimeLabel, controlStack].forEach { v in
+    setupPlayer(song: musicCollection.getSong(index: playingIndex))
+    [collectionName, cover, coverCircle, coverCircleCenter, songNameLabel, artistNameLabel, progressArc, elapsedTimeLabel, remainingTimeLabel, controlStack].forEach { v in
       addSubview(v)
     }
     setupConstraints()
@@ -175,30 +177,30 @@ final class MediaPlayer: UIView {
   
   private func setupConstraints() {
     
-    //album cover
+    //cover
     NSLayoutConstraint.activate([
-      albumCover.centerXAnchor.constraint(equalTo: centerXAnchor),
-      albumCover.topAnchor.constraint(equalTo: topAnchor, constant: 120),
-      albumCover.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.65),
-      albumCover.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.65)
+      cover.centerXAnchor.constraint(equalTo: centerXAnchor),
+      cover.topAnchor.constraint(equalTo: topAnchor, constant: 120),
+      cover.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.65),
+      cover.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.65)
     ])
     
-    //album circle
+    //cover circle
     NSLayoutConstraint.activate([
-      albumCircle.centerXAnchor.constraint(equalTo: albumCover.centerXAnchor),
-      albumCircle.centerYAnchor.constraint(equalTo: albumCover.centerYAnchor),
+      coverCircle.centerXAnchor.constraint(equalTo: cover.centerXAnchor),
+      coverCircle.centerYAnchor.constraint(equalTo: cover.centerYAnchor),
     ])
     
-    //album circle center
+    //cover circle center
     NSLayoutConstraint.activate([
-      albumCircleCenter.centerXAnchor.constraint(equalTo: albumCover.centerXAnchor),
-      albumCircleCenter.centerYAnchor.constraint(equalTo: albumCover.centerYAnchor),
+      coverCircleCenter.centerXAnchor.constraint(equalTo: cover.centerXAnchor),
+      coverCircleCenter.centerYAnchor.constraint(equalTo: cover.centerYAnchor),
     ])
     
     //progress arc
     NSLayoutConstraint.activate([
-      progressArc.centerXAnchor.constraint(equalTo: albumCover.centerXAnchor),
-      progressArc.centerYAnchor.constraint(equalTo: albumCover.centerYAnchor),
+      progressArc.centerXAnchor.constraint(equalTo: cover.centerXAnchor),
+      progressArc.centerYAnchor.constraint(equalTo: cover.centerYAnchor),
       progressArc.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.85),
       progressArc.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.85)
     ])
@@ -227,17 +229,17 @@ final class MediaPlayer: UIView {
       songNameLabel.topAnchor.constraint(equalTo: artistNameLabel.bottomAnchor, constant: 8)
     ])
     
-    //album name
+    //collection name
     NSLayoutConstraint.activate([
-      albumName.centerXAnchor.constraint(equalTo: centerXAnchor),
-      albumName.topAnchor.constraint(equalTo: songNameLabel.bottomAnchor, constant: 8)
+      collectionName.centerXAnchor.constraint(equalTo: centerXAnchor),
+      collectionName.topAnchor.constraint(equalTo: songNameLabel.bottomAnchor, constant: 8)
     ])
   
     //control stack
     NSLayoutConstraint.activate([
       controlStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 70),
       controlStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -70),
-      controlStack.topAnchor.constraint(equalTo: albumName.bottomAnchor, constant: 20)
+      controlStack.topAnchor.constraint(equalTo: collectionName.bottomAnchor, constant: 20)
     ])
   }
   
@@ -297,10 +299,10 @@ final class MediaPlayer: UIView {
   @objc private func didTapPrevious(_ sender: UIButton) {
     playingIndex -= 1
     if playingIndex < 0 {
-      playingIndex = album.getSongsCount() - 1
+      playingIndex = musicCollection.getSongsCount() - 1
     }
     
-    setupPlayer(song: album.getSong(index: playingIndex))
+    setupPlayer(song: musicCollection.getSong(index: playingIndex))
     play()
     setPlayPauseIcon(isPlaying: player.isPlaying)
   }
@@ -318,11 +320,11 @@ final class MediaPlayer: UIView {
   
   @objc private func didTapNext(_ sender: UIButton) {
     playingIndex += 1
-    if playingIndex >= album.getSongsCount() {
+    if playingIndex >= musicCollection.getSongsCount() {
       playingIndex = 0
     }
     
-    setupPlayer(song: album.getSong(index: playingIndex))
+    setupPlayer(song: musicCollection.getSong(index: playingIndex))
     play()
     setPlayPauseIcon(isPlaying: player.isPlaying)
   }

@@ -13,7 +13,7 @@ class AlbumViewModel {
     
   init() {
     let storage = AppleMusicStorage()
-    storage.delegate = self
+//    storage.delegate = self
     
 //    storage?.bindSongs = {
 ////      self.authSucceeded()
@@ -36,9 +36,6 @@ class AlbumViewModel {
   }
   
   func getAlbum(index: Int) -> Album {
-    
-
-    
     return albums[index]
   }
 }
