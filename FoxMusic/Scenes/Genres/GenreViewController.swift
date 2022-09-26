@@ -10,77 +10,53 @@ import UIKit
 class GenreViewController: UIViewController {
 
   var viewModel: GenreViewModel!
-    
-  private lazy var tableView: UITableView = {
-    let table = UITableView()
-    table.translatesAutoresizingMaskIntoConstraints = false
-    table.delegate = self
-    table.dataSource = self
-    table.register(GenreTableViewCell.self, forCellReuseIdentifier: "cell")
-    table.estimatedRowHeight = 132
-    table.rowHeight = UITableView.automaticDimension
-    table.backgroundColor = UIColor(named: "blue")
-    var image = UIImageView(image: UIImage(named: "fox-screen"))
-    image.contentMode = .scaleAspectFit
-    table.backgroundView = image
-    table.tableFooterView = UIView()
-    return table
-  }()
+  var collectionView: UICollectionView!
+  
+  override func loadView() {
+    let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+    layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
+    layout.itemSize = CGSize(width: 180, height: 90)
+    collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    self.view = collectionView
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     setupView()
-    
-    viewModel?.genresLoaded = {
-      DispatchQueue.main.async {
-        self.tableView.reloadData()
-      }
-    }
-    
   }
   
   private func setupView() {
     title = Constants.genresScreen.title
-    view.addSubview(tableView)
-    setupConstraints()
-  }
-  
-  private func setupConstraints() {
-    NSLayoutConstraint.activate([
-      tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-      tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      tableView.topAnchor.constraint(equalTo: view.topAnchor),
-      tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-    ])
+    collectionView.dataSource = self
+    collectionView.delegate = self
+    collectionView.backgroundColor = .systemOrange
+    collectionView.register(GenreCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+    
+    viewModel?.genresLoaded = {
+      DispatchQueue.main.async {
+        self.collectionView.reloadData()
+      }
+    }
   }
 }
 
-extension GenreViewController: UITableViewDelegate, UITableViewDataSource {
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return viewModel?.getGenresCount() ?? 0
+extension GenreViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+      print("Collection view at row \(collectionView.tag) selected index path \(indexPath)")
   }
   
-  public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? GenreTableViewCell
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    return viewModel?.getGenresCount() ?? 0
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? GenreCollectionViewCell
     else {
-      return UITableViewCell()
+      return UICollectionViewCell()
     }
-      let genre = viewModel?.getGenre(index: indexPath.row)
-      cell.genre = genre
-//      cell.textLabel?.text = genre?.getName()
+    
+    let genre = viewModel?.getGenre(index: indexPath.row)
+    cell.genre = genre
     return cell
   }
-  
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
-//    guard let genre = viewModel?.getGenre(index: indexPath.row) else {return}
-//
-//    let vc = MusicPlayerViewController(musicCollection: musicCollection)
-//    tableView.deselectRow(at: indexPath, animated: true)
-//    let backButton = UIBarButtonItem()
-//    backButton.title = Constants.playerScreen.backButtonTitle
-//    navigationItem.backBarButtonItem = backButton
-//    show(vc, sender: self)
-  }
 }
-

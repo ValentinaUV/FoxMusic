@@ -53,7 +53,7 @@ extension AlbumViewController: UITableViewDelegate, UITableViewDataSource {
       return viewModel?.getAlbumsCount() ?? 0
   }
   
-  public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? AlbumTableViewCell
     else {
       return UITableViewCell()

@@ -9,8 +9,7 @@ import Foundation
 import Combine
 
 class GenreViewModel {
-  
-//  var genres: [Genre]!
+
   var storage: MusicStorage!
   private var cancellables = Set<AnyCancellable>()
   
@@ -24,7 +23,6 @@ class GenreViewModel {
   
   init() {
     storage = AppleMusicStorage()
-//    storage.delegate = self
     subscribeToGenres()
     storage.getGenres()
   }
