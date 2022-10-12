@@ -66,12 +66,12 @@ extension AlbumViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    guard let album = viewModel?.getAlbum(index: indexPath.row) else {return}
-    let vc = MusicPlayerViewController(musicCollection: album)
-    tableView.deselectRow(at: indexPath, animated: true)
-    let backButton = UIBarButtonItem()
-    backButton.title = Constants.playerScreen.backButtonTitle
-    navigationItem.backBarButtonItem = backButton
-    show(vc, sender: self)
+//    guard let album = viewModel?.getAlbum(index: indexPath.row) else {return}
+//    let vc = MusicPlayerViewController(musicCollection: album)
+//    tableView.deselectRow(at: indexPath, animated: true)
+//    let backButton = UIBarButtonItem()
+//    backButton.title = Constants.playerScreen.backButtonTitle
+//    navigationItem.backBarButtonItem = backButton
+//    show(vc, sender: self)
   }
 }

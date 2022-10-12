@@ -20,7 +20,7 @@ class AlbumViewModel {
 //      albums.append(Album(name: "Acoustic", image: "acoustic", songs: storage.getSongs()))
 //    }
     
-    storage.getSongs()
+//    storage.getSongs()
 //    albums.append(Album(name: "Acoustic", image: "acoustic", songs: storage.getSongs()))
     
   }

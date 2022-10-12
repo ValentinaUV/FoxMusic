@@ -41,6 +41,10 @@ struct Song {
     return image ?? ""
   }
   
+  func getImageUrl() -> URL? {
+    return imageUrl
+  }
+  
   func getArtist() -> String {
     return artist
   }
@@ -51,5 +55,9 @@ struct Song {
   
   func getFileExtension() -> String {
     return fileExtension
+  }
+  
+  func getUrl() -> URL? {
+    return url
   }
 }

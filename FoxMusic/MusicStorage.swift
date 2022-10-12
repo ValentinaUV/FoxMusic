@@ -7,32 +7,31 @@
 
 import Foundation
 import MusicKit
+import MediaPlayer
 
 protocol MusicStorage {
   
   var genresPublisher: Published<[Genre]>.Publisher { get }
-  
+  var genreWithSongsPublisher: Published<Genre?>.Publisher { get }
+
   func getGenres()
+  func getSongsByGenre(genre: Genre)
 }
 
 
-
 public typealias Genres = MusicItemCollection<MusicKit.Genre>
+public typealias Songs = MusicItemCollection<MusicKit.Song>
 
 class AppleMusicStorage: MusicStorage {
   
   let rootPath = "https://api.music.apple.com/v1"
   let publicCatalogPath = "/catalog"
   
-//  var delegate: AlbumViewModel!
-  
-  
   @Published var genres: [Genre] = []
   var genresPublisher: Published<[Genre]>.Publisher { $genres }
   
-//  public init(genres: [Genre]) {
-//    self.genres = genres
-//  }
+  @Published var genreWithSongs: Genre?
+  var genreWithSongsPublisher: Published<Genre?>.Publisher { $genreWithSongs }
   
   private func getCountryCode() async throws -> String {
     return try await MusicDataRequest.currentCountryCode
@@ -40,7 +39,6 @@ class AppleMusicStorage: MusicStorage {
 
   func getTopGenres() async throws -> Genres {
     let countryCode = try await getCountryCode()
-    print(countryCode)
     let path = "\(rootPath)\(publicCatalogPath)/\(countryCode)/genres"
     let request = MusicDataRequest(urlRequest: URLRequest(url: URL(string: path)!))
     let response = try await request.response()
@@ -56,11 +54,9 @@ class AppleMusicStorage: MusicStorage {
         case .authorized:
           do {
             let genres = try await getTopGenres()
-            print("================genre==============")
-            let genre = genres[2]
-            print(genre)
+            print("genres: ")
+            print(genres)
             returnGenres(genres: genres)
-            
           } catch {
             print(error)
           }
@@ -77,73 +73,54 @@ class AppleMusicStorage: MusicStorage {
     }
   }
   
-  func returnGenres(genres: Genres) {
+  private func returnGenres(genres: Genres) {
     var items: [Genre] = []
     for genre in genres {
-      items.append(Genre(name: genre.name, songs: []))
+      items.append(Genre(id: genre.id.rawValue, name: genre.name, songs: []))
     }
     self.genres = items
   }
   
-  
-  
-//  public var type: MusicCatalogChartRequestable.Type {
-//    switch self {
-//      case .songs:
-//        return Song.self
-//      case .albums:
-//        return Album.self
-//      case .playlists:
-//        return Playlist.self
-//      case .musicVideos:
-//        return MusicVideo.self
-//    }
-//  }
-  
   @available(iOS 16.0, *)
-  private func fetchCatalogCharts(genre: MusicKit.Genre?,
-                                  kinds: [MusicCatalogChartKind],
-                                  types: [MusicKit.Song.Type],
-                                         limit: Int?,
-                                         offset: Int?) async throws -> MusicCatalogChartsResponse {
-//    let chartTypes = types.map { $0.Type }
-    var request = MusicCatalogChartsRequest(genre: genre, kinds: kinds, types: types)
+  private func fetchCatalogCharts(genre: MusicKit.Genre, kinds: [MusicCatalogChartKind], types: [MusicCatalogChartRequestable.Type], limit: Int?, offset: Int?) async throws -> MusicCatalogChartsResponse {
+    let chartTypes = types.map { $0}
+    var request = MusicCatalogChartsRequest(genre: genre, kinds: kinds, types: chartTypes)
     request.limit = limit
     request.offset = offset
     let response = try await request.response()
     return response
   }
   
+  private func getGenreById(id: String) async throws -> MusicKit.Genre {
+    let itemId = MusicItemID(rawValue: id)
+    let request = MusicCatalogResourceRequest<MusicKit.Genre>(matching: \.id, equalTo: itemId)
+    let response = try await request.response()
+
+    guard let genre = response.items.first else {
+      throw MusicStorageError.notFound(for: id)
+    }
+
+    return genre
+  }
+  
+  private func returnGenreWithSongs(genre: Genre) {
+    self.genreWithSongs = genre
+  }
+  
   @available(iOS 16.0, *)
-  func getSongs() {
+  func getSongsByGenre(genre: Genre) {
     Task {
       do {
+        let musicKitGenre = try await getGenreById(id: genre.getId())
+        print("musicKitGenre: \(musicKitGenre)")
         let status = await MusicAuthorization.request()
         switch status {
         case .authorized:
           do {
-            let genres = try await getTopGenres()
-            print("================genre==============")
-            let genre = genres[2]
-            print(genre)
-
-//            var songsRequest = MusicCatalogSearchRequest(term: genre.name,
-//                                                          types: [MusicKit.Song.self])
-//            songsRequest.limit = 10
-//            let result = try await songsRequest.response()
-//            print(result.songs.count)
-            
-            let result = try await fetchCatalogCharts(genre: genre, kinds: [.mostPlayed], types: [MusicKit.Song.self], limit: 10, offset: 0)
-
-            var songs: [Song] = []
-            for items in result.songCharts {
-              for song in items.items {
-                print(song.genreNames)
-                songs.append(Song(name: song.title, imageUrl: song.artwork?.url(width: 100, height: 100), artist: song.artistName, url: song.url!))
-              }
-            }
-            print("send to delegate")
-//            delegate.receiveSongs(songs: songs)
+            let response = try await fetchCatalogCharts(genre: musicKitGenre, kinds: [.mostPlayed], types: [MusicKit.Album.self], limit: 10, offset: 0)
+        
+            guard let album = response.albumCharts.first?.items.first else { return }
+            playAlbum(album: album)
           } catch {
             print(error)
           }
@@ -156,6 +133,62 @@ class AppleMusicStorage: MusicStorage {
         default:
           break
         }
+      }
+    }
+  }
+  
+  private func playAlbum(album: MusicKit.Album) {
+    do {
+      let data = try JSONEncoder().encode(album.playParameters)
+      let playParameters = try JSONDecoder().decode(MPMusicPlayerPlayParameters.self, from: data)
+      let queue = MPMusicPlayerPlayParametersQueueDescriptor(playParametersQueue: [playParameters])
+      let player = MPMusicPlayerController.applicationMusicPlayer
+      player.setQueue(with: queue)
+      print("PLAYER READY")
+      DispatchQueue.main.async {
+        player.prepareToPlay { (error) in
+          if let error = error as? MPError {
+            print("Error while preparing to play: \(error)")
+          } else {
+            player.play()
+          }
+        }
+      }
+    } catch {
+      print(error)
+    }
+  }
+  
+  private func playSongs(songs: Songs) {
+    Task {
+        let status = await MusicAuthorization.request()
+        switch status {
+        case .authorized:
+          do {
+            print("AUTHORIZED")
+            guard let song = songs.first else { return }
+            let data = try JSONEncoder().encode(song.playParameters)
+            let playParameters = try JSONDecoder().decode(MPMusicPlayerPlayParameters.self, from: data)
+            print("PLAY PARAMS READY")
+            let queue = MPMusicPlayerPlayParametersQueueDescriptor(playParametersQueue: [playParameters])
+            print("QUEUE READY")
+//            let player = MPMusicPlayerController.applicationMusicPlayer
+//            let player = MPMusicPlayerController.applicationQueuePlayer
+            let player = MPMusicPlayerController.systemMusicPlayer
+            player.setQueue(with: queue)
+            print("PLAYER READY")
+            player.prepareToPlay { (error) in
+                if let error = error as? MPError {
+                    print("Error while preparing to play: \(error)")
+                } else {
+                    player.play()
+                }
+            }
+          } catch {
+            print(error)
+          }
+      default:
+        break
       }
     }
   }

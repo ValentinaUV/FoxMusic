@@ -31,18 +31,37 @@ class GenreViewController: UIViewController {
     collectionView.delegate = self
     collectionView.backgroundColor = .systemOrange
     collectionView.register(GenreCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-    
+    genresLoaded()
+  }
+  
+  private func genresLoaded() {
+    print("genresLoaded")
     viewModel?.genresLoaded = {
       DispatchQueue.main.async {
         self.collectionView.reloadData()
       }
     }
   }
+  
+  private func genreWithSongsLoaded() {
+    viewModel?.genreWithSongsLoaded = {
+      DispatchQueue.main.async {
+        guard let genre = self.viewModel?.genreWithSongs else {return}
+        
+        let vc = MusicPlayerViewController(musicCollection: genre)
+        let backButton = UIBarButtonItem()
+        backButton.title = Constants.playerScreen.backButtonTitle
+        self.navigationItem.backBarButtonItem = backButton
+        self.show(vc, sender: self)
+      }
+    }
+  }
 }
 
 extension GenreViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+  
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-      print("Collection view at row \(collectionView.tag) selected index path \(indexPath)")
+    viewModel?.getSongsByGenre(index: indexPath.row)
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

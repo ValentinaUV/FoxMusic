@@ -8,12 +8,18 @@
 import Foundation
 
 struct Genre: MusicCollection {
+  private var id: String
   private var name: String
   private var songs: [Song]!
     
-  init(name: String, songs: [Song]) {
+  init(id: String, name: String, songs: [Song]) {
+    self.id = id
     self.name = name
     self.songs = songs
+  }
+  
+  func getId() -> String {
+    return id
   }
   
   func getName() -> String {
@@ -26,5 +32,9 @@ struct Genre: MusicCollection {
     
   func getSong(index: Int) -> Song {
     return songs[index]
+  }
+  
+  mutating func addSongs(songs: [Song]) {
+    self.songs = songs
   }
 }

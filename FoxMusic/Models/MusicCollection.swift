@@ -9,7 +9,8 @@ import Foundation
 
 protocol MusicCollection {
   
-  init(name: String, songs: [Song])
+  init(id: String, name: String, songs: [Song])
+  func getId() -> String
   func getName() -> String
   func getSongsCount() -> Int
   func getSong(index: Int) -> Song

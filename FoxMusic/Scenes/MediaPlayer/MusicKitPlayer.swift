@@ -1,15 +1,14 @@
 //
-//  MediaPlayer.swift
-//  MusicApp
+//  MusicKitPlayer.swift
+//  FoxMusic
 //
-//  Created by Ungurean Valentina on 11.07.2022.
+//  Created by Valentina Ungurean on 05.10.2022.
 //
 
 import UIKit
 import AVKit
-import MusicKit
 
-final class MediaPlayer: UIView {
+final class MusicKitPlayer: UIView {
   
   var musicCollection: MusicCollection
   
@@ -149,7 +148,9 @@ final class MediaPlayer: UIView {
     return view
   }()
   
-  private var player = AVAudioPlayer() //MediaPlayer()
+  private var player = AVAudioPlayer()
+  var avPlayer: AVPlayer!
+  var isPaused: Bool!
   private var timer: Timer?
   private var playingIndex = 0
   
@@ -169,12 +170,29 @@ final class MediaPlayer: UIView {
     //here should be song's image
 //    cover.image = UIImage(named: musicCollection.getImage())
     backgroundColor = UIColor(named: "darkColor")
-    setupPlayer(song: musicCollection.getSong(index: playingIndex))
+    
+    isPaused = false
+//    playButton.setImage(UIImage(named:"pause"), for: .normal)
+//    guard let songUrlString = playList[self.index] as? String else {return}
+    guard let songUrl = musicCollection.getSong(index: playingIndex).getUrl() else {return}
+    self.playUrl(url: songUrl)
+//    self.setupTimer()
+    
+//    setupPlayer(song: musicCollection.getSong(index: playingIndex))
     [collectionName, cover, coverCircle, coverCircleCenter, songNameLabel, artistNameLabel, progressArc, elapsedTimeLabel, remainingTimeLabel, controlStack].forEach { v in
       addSubview(v)
     }
     setupConstraints()
   }
+  
+  func playUrl(url:URL) {
+    let a = URL(string: "https://www.bensound.org/bensound-music/bensound-happyrock.mp3")
+    self.avPlayer = AVPlayer(playerItem: AVPlayerItem(url: a!))
+      self.avPlayer.automaticallyWaitsToMinimizeStalling = false
+      avPlayer!.volume = 1.0
+      avPlayer.play()
+  }
+  
   
   private func setupConstraints() {
     
@@ -256,6 +274,41 @@ final class MediaPlayer: UIView {
     }
   }
   
+  
+  
+  
+  
+  func getLibraryDirectory() -> URL {
+    // find all possible documents directories for this user
+    let paths = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)
+
+    // just send back the first one, which ought to be the only one
+    return paths[0]
+  }
+  
+  private func saveDataFile(data:Data, fileName: String, folderName: String) -> URL {
+     
+    let directoryUrl = self.getLibraryDirectory().appendingPathComponent(folderName, isDirectory: true)
+             
+    do {
+      try FileManager.default.createDirectory(at: directoryUrl, withIntermediateDirectories: true)
+      print("Directory Creation -> Success \n \(directoryUrl)")
+    } catch {
+      print("Directory Creation -> Failed")
+    }
+     
+    let url = directoryUrl.appendingPathComponent(fileName)
+     
+    do {
+      try data.write(to: url, options: .atomic )
+      print("File Writing -> Success")
+    } catch {
+      print("File Writing -> Error \n \(error.localizedDescription)")
+    }
+         
+    return url
+  }
+  
   private func setupPlayer(song: Song) {
 //    guard let url = Bundle.main.url(forResource: song.getUrl()?.description, withExtension: song.getFileExtension()) else {
 //      return
@@ -284,7 +337,7 @@ final class MediaPlayer: UIView {
       return
     }
     
-//    downloadFileFromURL(url: url)
+    downloadFileFromURL(url: url)
 //    do {
 //      let fileData = try Data(contentsOf: url)
 //      storedURL = saveDataFile(data: fileData, fileName: "test.mp3", folderName: "testFolder")
@@ -316,6 +369,47 @@ final class MediaPlayer: UIView {
 //      print(error.localizedDescription)
 //    }
   }
+  
+  func downloadFileFromURL(url: URL){
+    var downloadTask:URLSessionDownloadTask
+    downloadTask = URLSession.shared.downloadTask(with: url) { (url, response, error) in
+        self.playSong(url: url!)
+    }
+    downloadTask.resume()
+  }
+  
+  func playSong(url:URL) {
+    do {
+      let songData = try NSData(contentsOf: url, options: NSData.ReadingOptions.mappedIfSafe)
+      try AVAudioSession.sharedInstance().setCategory(.playback)
+      try AVAudioSession.sharedInstance().setActive(true)
+      player = try AVAudioPlayer(data: songData as Data, fileTypeHint: AVFileType.mp3.rawValue)
+      player.prepareToPlay()
+      player.play()
+      
+      
+      
+      
+//      player = try AVAudioPlayer(contentsOf: url as URL)
+//      print("Let's play: \(url.description)")
+//      player.delegate = self
+//      player.prepareToPlay()
+
+//      try AVAudioSession.sharedInstance().setCategory(.playback)
+//      try AVAudioSession.sharedInstance().setActive(true)
+      
+//        player.prepareToPlay()
+//        player.volume = 2.0
+//      player.play()
+    } catch let error as NSError {
+      print("error here .....")
+        print(error.localizedDescription)
+    } catch {
+        print("AVAudioPlayer init failed")
+    }
+      
+  }
+  
   
   func play() {
     progressArc.value = 0.0
@@ -400,10 +494,10 @@ final class MediaPlayer: UIView {
 //    didTapNext(nextButton)
 //  }
 //}
-
-extension UIImageView {
-  func roundedImage() {
-    self.layer.cornerRadius = (self.frame.size.width) / 2;
-    self.clipsToBounds = true
-  }
-}
+//
+//extension UIImageView {
+//  func roundedImage() {
+//    self.layer.cornerRadius = (self.frame.size.width) / 2;
+//    self.clipsToBounds = true
+//  }
+//}

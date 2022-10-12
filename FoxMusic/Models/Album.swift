@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct Album: MusicCollection {
+//struct Album: MusicCollection {
+struct Album {
   private var name: String
   private var image: String!
   private var songs: [Song]
