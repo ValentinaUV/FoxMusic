@@ -9,4 +9,5 @@ import Foundation
 
 public enum MusicStorageError: Error, Equatable {
   case notFound(for: String)
+  case notAuthorized(for: String)
 }

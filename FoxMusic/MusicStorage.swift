@@ -56,22 +56,10 @@ class AppleMusicStorage: MusicStorage {
         let status = await MusicAuthorization.request()
         switch status {
         case .authorized:
-          do {
-            let genres = try await getTopGenres()
-            print("genres: ")
-            print(genres)
-            returnGenres(genres: genres)
-          } catch {
-            print(error)
-          }
-//        case .notDetermined:
-//          <#code#>
-//        case .denied:
-//          <#code#>
-//        case .restricted:
-//          <#code#>
+          let genres = try await getTopGenres()
+          returnGenres(genres: genres)
         default:
-          break
+          throw MusicStorageError.notAuthorized(for: "Top Genres")
         }
       }
     }
@@ -120,57 +108,13 @@ class AppleMusicStorage: MusicStorage {
         let status = await MusicAuthorization.request()
         switch status {
         case .authorized:
-          do {
-            let response = try await fetchCatalogCharts(genre: musicKitGenre, kinds: [.mostPlayed], types: [MusicKit.Album.self], limit: 10, offset: 0)
-        
-            guard let album = response.albumCharts.first?.items.first else { return }
-            print("album name: \(album.title)")
-            self.album = album
-//            playAlbum(album: album)
-          } catch {
-            print(error)
-          }
-//        case .notDetermined:
-//          <#code#>
-//        case .denied:
-//          <#code#>
-//        case .restricted:
-//          <#code#>
+          let response = try await fetchCatalogCharts(genre: musicKitGenre, kinds: [.mostPlayed], types: [MusicKit.Album.self], limit: 10, offset: 0)
+          guard let album = response.albumCharts.first?.items.first else { return }
+          self.album = album
         default:
-          break
+          throw MusicStorageError.notAuthorized(for: "Album Charts")
         }
       }
-    }
-  }
-  
-  private func playAlbum(album: MusicKit.Album) {
-    do {
-      if let albumPlayParams = album.playParameters {
-        let data = try JSONEncoder().encode(albumPlayParams)
-        let playParameters = try JSONDecoder().decode(MPMusicPlayerPlayParameters.self, from: data)
-        let queue = MPMusicPlayerPlayParametersQueueDescriptor(playParametersQueue: [playParameters])
-        let player = MPMusicPlayerController.applicationMusicPlayer
-        player.setQueue(with: queue)
-        
-        
-//        DispatchQueue.main.async {
-////          player.play()
-//
-//          let viewPlayer = MusicKitPlayer(player: player)
-//          viewPlayer.play()
-//          //        player.prepareToPlay { (error) in
-//          //          if let error = error as? MPError {
-//          //            print("Error while preparing to play: \(error)")
-//          //          } else {
-//          //            player.play()
-//          //          }
-//          //        }
-//        }
-      } else {
-        print("PLAY PARAMS NOT AVAILABLE")
-      }
-    } catch {
-      print(error)
     }
   }
 }
