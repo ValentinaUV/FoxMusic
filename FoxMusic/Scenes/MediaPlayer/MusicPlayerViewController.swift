@@ -6,18 +6,31 @@
 //
 
 import UIKit
+import MusicKit
+import MediaPlayer
 
 final class MusicPlayerViewController: UIViewController {
-  var musicCollection: MusicCollection
   
-  private lazy var mediaPlayer: MediaPlayer = {
-    let player = MediaPlayer(musicCollection: musicCollection)
-    player.translatesAutoresizingMaskIntoConstraints = false
-    return player
-  }()
+  var mediaPlayer: MusicKitPlayer!
   
-  init(musicCollection: MusicCollection) {
-    self.musicCollection = musicCollection
+  init(album: MusicKit.Album) {
+    
+    do {
+      if let albumPlayParams = album.playParameters {
+        let data = try JSONEncoder().encode(albumPlayParams)
+        let playParameters = try JSONDecoder().decode(MPMusicPlayerPlayParameters.self, from: data)
+        let queue = MPMusicPlayerPlayParametersQueueDescriptor(playParametersQueue: [playParameters])
+        let player = MPMusicPlayerController.applicationMusicPlayer
+        player.setQueue(with: queue)
+        mediaPlayer = MusicKitPlayer(player: player)
+        mediaPlayer.translatesAutoresizingMaskIntoConstraints = false
+      } else {
+        print("PLAY PARAMS NOT AVAILABLE")
+      }
+    } catch {
+      print(error)
+    }
+    
     super.init(nibName: nil, bundle: nil)
   }
   

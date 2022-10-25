@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import MusicKit
 
 class GenreViewModel {
 
@@ -15,6 +16,7 @@ class GenreViewModel {
   
   var genresLoaded : (() -> ()) = {}
   var genreWithSongsLoaded : (() -> ()) = {}
+  var albumLoaded : (() -> ()) = {}
   
   private(set) var genres: [Genre]! {
     didSet {
@@ -29,10 +31,16 @@ class GenreViewModel {
     }
   }
   
+  private(set) var album: MusicKit.Album! {
+    didSet {
+      albumLoaded()
+    }
+  }
+  
   init() {
     storage = AppleMusicStorage()
     subscribeToGenres()
-//    subscribeToGenreSongs()
+    subscribeToAlbum()
     storage.getGenres()
   }
   
@@ -53,10 +61,10 @@ class GenreViewModel {
       .store(in: &cancellables)
   }
   
-  private func subscribeToGenreSongs() {
-    storage.genreWithSongsPublisher
+  private func subscribeToAlbum() {
+    storage.albumPublisher
       .sink { item in
-        self.genreWithSongs = item
+        self.album = item
       }
       .store(in: &cancellables)
   }

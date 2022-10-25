@@ -13,6 +13,7 @@ protocol MusicStorage {
   
   var genresPublisher: Published<[Genre]>.Publisher { get }
   var genreWithSongsPublisher: Published<Genre?>.Publisher { get }
+  var albumPublisher: Published<MusicKit.Album?>.Publisher { get }
 
   func getGenres()
   func getSongsByGenre(genre: Genre)
@@ -32,6 +33,9 @@ class AppleMusicStorage: MusicStorage {
   
   @Published var genreWithSongs: Genre?
   var genreWithSongsPublisher: Published<Genre?>.Publisher { $genreWithSongs }
+  
+  @Published var album: MusicKit.Album?
+  var albumPublisher: Published<MusicKit.Album?>.Publisher { $album }
   
   private func getCountryCode() async throws -> String {
     return try await MusicDataRequest.currentCountryCode
@@ -120,7 +124,9 @@ class AppleMusicStorage: MusicStorage {
             let response = try await fetchCatalogCharts(genre: musicKitGenre, kinds: [.mostPlayed], types: [MusicKit.Album.self], limit: 10, offset: 0)
         
             guard let album = response.albumCharts.first?.items.first else { return }
-            playAlbum(album: album)
+            print("album name: \(album.title)")
+            self.album = album
+//            playAlbum(album: album)
           } catch {
             print(error)
           }
@@ -139,57 +145,32 @@ class AppleMusicStorage: MusicStorage {
   
   private func playAlbum(album: MusicKit.Album) {
     do {
-      let data = try JSONEncoder().encode(album.playParameters)
-      let playParameters = try JSONDecoder().decode(MPMusicPlayerPlayParameters.self, from: data)
-      let queue = MPMusicPlayerPlayParametersQueueDescriptor(playParametersQueue: [playParameters])
-      let player = MPMusicPlayerController.applicationMusicPlayer
-      player.setQueue(with: queue)
-      print("PLAYER READY")
-      DispatchQueue.main.async {
-        player.prepareToPlay { (error) in
-          if let error = error as? MPError {
-            print("Error while preparing to play: \(error)")
-          } else {
-            player.play()
-          }
-        }
+      if let albumPlayParams = album.playParameters {
+        let data = try JSONEncoder().encode(albumPlayParams)
+        let playParameters = try JSONDecoder().decode(MPMusicPlayerPlayParameters.self, from: data)
+        let queue = MPMusicPlayerPlayParametersQueueDescriptor(playParametersQueue: [playParameters])
+        let player = MPMusicPlayerController.applicationMusicPlayer
+        player.setQueue(with: queue)
+        
+        
+//        DispatchQueue.main.async {
+////          player.play()
+//
+//          let viewPlayer = MusicKitPlayer(player: player)
+//          viewPlayer.play()
+//          //        player.prepareToPlay { (error) in
+//          //          if let error = error as? MPError {
+//          //            print("Error while preparing to play: \(error)")
+//          //          } else {
+//          //            player.play()
+//          //          }
+//          //        }
+//        }
+      } else {
+        print("PLAY PARAMS NOT AVAILABLE")
       }
     } catch {
       print(error)
-    }
-  }
-  
-  private func playSongs(songs: Songs) {
-    Task {
-        let status = await MusicAuthorization.request()
-        switch status {
-        case .authorized:
-          do {
-            print("AUTHORIZED")
-            guard let song = songs.first else { return }
-            let data = try JSONEncoder().encode(song.playParameters)
-            let playParameters = try JSONDecoder().decode(MPMusicPlayerPlayParameters.self, from: data)
-            print("PLAY PARAMS READY")
-            let queue = MPMusicPlayerPlayParametersQueueDescriptor(playParametersQueue: [playParameters])
-            print("QUEUE READY")
-//            let player = MPMusicPlayerController.applicationMusicPlayer
-//            let player = MPMusicPlayerController.applicationQueuePlayer
-            let player = MPMusicPlayerController.systemMusicPlayer
-            player.setQueue(with: queue)
-            print("PLAYER READY")
-            player.prepareToPlay { (error) in
-                if let error = error as? MPError {
-                    print("Error while preparing to play: \(error)")
-                } else {
-                    player.play()
-                }
-            }
-          } catch {
-            print(error)
-          }
-      default:
-        break
-      }
     }
   }
 }

@@ -6,15 +6,19 @@
 //
 
 import UIKit
-import AVKit
+import MusicKit
+import MediaPlayer
 
 final class MusicKitPlayer: UIView {
   
-  var musicCollection: MusicCollection
+  var player: MPMusicPlayerController
+  
+  private lazy var coverWidth: Double = {
+    return UIScreen.main.bounds.width * 0.66
+  } ()
   
   private lazy var cover: UIImageView = {
-    let width = UIScreen.main.bounds.width * 0.66
-    let view = UIImageView(frame: CGRect(x: 0, y: 0, width: width, height: width))
+    let view = UIImageView(frame: CGRect(x: 0, y: 0, width: coverWidth, height: coverWidth))
     view.translatesAutoresizingMaskIntoConstraints = false
     view.contentMode = .scaleAspectFill
     view.roundedImage()
@@ -122,10 +126,10 @@ final class MusicKitPlayer: UIView {
   private lazy var playPauseButton: UIButton = {
     let view = UIButton()
     view.translatesAutoresizingMaskIntoConstraints = false
-    let config = UIImage.SymbolConfiguration(pointSize: 60)
-    view.setImage(UIImage.init(systemName: "play", withConfiguration: config), for: .normal)
+    let config = UIImage.SymbolConfiguration(pointSize: 70)
+    view.setImage(UIImage.init(systemName: "play.circle", withConfiguration: config), for: .normal)
     view.addTarget(self, action: #selector(didTapPlayPause(_:)), for: .touchUpInside)
-    view.tintColor = .white
+    view.tintColor = UIColor(named: "orange") ?? .systemOrange
     return view
   }()
   
@@ -148,14 +152,12 @@ final class MusicKitPlayer: UIView {
     return view
   }()
   
-  private var player = AVAudioPlayer()
-  var avPlayer: AVPlayer!
   var isPaused: Bool!
   private var timer: Timer?
   private var playingIndex = 0
   
-  init(musicCollection: MusicCollection) {
-    self.musicCollection = musicCollection
+  init(player: MPMusicPlayerController) {
+    self.player = player
     super.init(frame: .zero)
     setupView()
   }
@@ -165,37 +167,25 @@ final class MusicKitPlayer: UIView {
   }
   
   private func setupView() {
-    collectionName.text = musicCollection.getName()
-    
-    //here should be song's image
-//    cover.image = UIImage(named: musicCollection.getImage())
     backgroundColor = UIColor(named: "darkColor")
     
     isPaused = false
-//    playButton.setImage(UIImage(named:"pause"), for: .normal)
-//    guard let songUrlString = playList[self.index] as? String else {return}
-    guard let songUrl = musicCollection.getSong(index: playingIndex).getUrl() else {return}
-    self.playUrl(url: songUrl)
-//    self.setupTimer()
-    
-//    setupPlayer(song: musicCollection.getSong(index: playingIndex))
+    setPlayPauseIcon(isPlaying: true)
+    setupTimer()
+
     [collectionName, cover, coverCircle, coverCircleCenter, songNameLabel, artistNameLabel, progressArc, elapsedTimeLabel, remainingTimeLabel, controlStack].forEach { v in
       addSubview(v)
     }
     setupConstraints()
   }
   
-  func playUrl(url:URL) {
-    let a = URL(string: "https://www.bensound.org/bensound-music/bensound-happyrock.mp3")
-    self.avPlayer = AVPlayer(playerItem: AVPlayerItem(url: a!))
-      self.avPlayer.automaticallyWaitsToMinimizeStalling = false
-      avPlayer!.volume = 1.0
-      avPlayer.play()
+  private func setupTimer() {
+    if timer == nil {
+      timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateProgress(_:)), userInfo: nil, repeats: true)
+    }
   }
   
-  
   private func setupConstraints() {
-    
     //cover
     NSLayoutConstraint.activate([
       cover.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -262,160 +252,22 @@ final class MusicKitPlayer: UIView {
     ])
   }
   
-  private func loadCoverImage(song: Song) {
-    if let imageUrl = song.getImageUrl() {
-      DispatchQueue.global().async {
-        if let data = try? Data(contentsOf: imageUrl) {
-          DispatchQueue.main.async {
-            self.cover.image = UIImage(data: data)
-          }
-        }
-      }
-    }
-  }
-  
-  
-  
-  
-  
-  func getLibraryDirectory() -> URL {
-    // find all possible documents directories for this user
-    let paths = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)
-
-    // just send back the first one, which ought to be the only one
-    return paths[0]
-  }
-  
-  private func saveDataFile(data:Data, fileName: String, folderName: String) -> URL {
-     
-    let directoryUrl = self.getLibraryDirectory().appendingPathComponent(folderName, isDirectory: true)
-             
-    do {
-      try FileManager.default.createDirectory(at: directoryUrl, withIntermediateDirectories: true)
-      print("Directory Creation -> Success \n \(directoryUrl)")
-    } catch {
-      print("Directory Creation -> Failed")
-    }
-     
-    let url = directoryUrl.appendingPathComponent(fileName)
-     
-    do {
-      try data.write(to: url, options: .atomic )
-      print("File Writing -> Success")
-    } catch {
-      print("File Writing -> Error \n \(error.localizedDescription)")
-    }
-         
-    return url
-  }
-  
-  private func setupPlayer(song: Song) {
-//    guard let url = Bundle.main.url(forResource: song.getUrl()?.description, withExtension: song.getFileExtension()) else {
-//      return
-//    }
-    
-//    guard let url = Bundle.main.url(forResource: song.getFileName(), withExtension: song.getFileExtension()) else {
-//      return
-//    }
-    
-    if timer == nil {
-      timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateProgress(_:)), userInfo: nil, repeats: true)
-    }
-    
-    loadCoverImage(song: song)
-    songNameLabel.text = song.getName()
-    artistNameLabel.text = song.getArtist()
-    
-    let storedURL: URL?
-//    guard let path = Bundle.main.path(forResource: song.getUrl()?.absoluteString, ofType: song.getFileExtension()) else {
-//      print("Sound file not found")
-//      return
-//    }
-//    let url = URL(fileURLWithPath: path)
-    guard let url = song.getUrl() else {
-      print("no song url")
-      return
-    }
-    
-    downloadFileFromURL(url: url)
-//    do {
-//      let fileData = try Data(contentsOf: url)
-//      storedURL = saveDataFile(data: fileData, fileName: "test.mp3", folderName: "testFolder")
-//
-//      print("File Writing on View -> Success \(storedURL?.description) ")
-//
-//      player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
-//      let url = URL(string: "https://s3.amazonaws.com/kargopolov/kukushka.mp3")
-//      let playerItem:AVPlayerItem = AVPlayerItem(url: url)
-//      player = AVPlayer(playerItem: playerItem)
-//      player.delegate = self
-//      player.prepareToPlay()
-//
-//      try AVAudioSession.sharedInstance().setCategory(.playback)
-//      try AVAudioSession.sharedInstance().setActive(true)
-//    } catch let error {
-//      print(error.localizedDescription)
-//    }
-//    do {
-////      player = try AVAudioPlayer(contentsOf: url)
-//      guard let url = storedURL else {return}
-//      player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
-//      player.delegate = self
-//      player.prepareToPlay()
-//
-//      try AVAudioSession.sharedInstance().setCategory(.playback)
-//      try AVAudioSession.sharedInstance().setActive(true)
-//    } catch let error {
-//      print(error.localizedDescription)
-//    }
-  }
-  
-  func downloadFileFromURL(url: URL){
-    var downloadTask:URLSessionDownloadTask
-    downloadTask = URLSession.shared.downloadTask(with: url) { (url, response, error) in
-        self.playSong(url: url!)
-    }
-    downloadTask.resume()
-  }
-  
-  func playSong(url:URL) {
-    do {
-      let songData = try NSData(contentsOf: url, options: NSData.ReadingOptions.mappedIfSafe)
-      try AVAudioSession.sharedInstance().setCategory(.playback)
-      try AVAudioSession.sharedInstance().setActive(true)
-      player = try AVAudioPlayer(data: songData as Data, fileTypeHint: AVFileType.mp3.rawValue)
-      player.prepareToPlay()
-      player.play()
-      
-      
-      
-      
-//      player = try AVAudioPlayer(contentsOf: url as URL)
-//      print("Let's play: \(url.description)")
-//      player.delegate = self
-//      player.prepareToPlay()
-
-//      try AVAudioSession.sharedInstance().setCategory(.playback)
-//      try AVAudioSession.sharedInstance().setActive(true)
-      
-//        player.prepareToPlay()
-//        player.volume = 2.0
-//      player.play()
-    } catch let error as NSError {
-      print("error here .....")
-        print(error.localizedDescription)
-    } catch {
-        print("AVAudioPlayer init failed")
-    }
-      
-  }
-  
-  
   func play() {
     progressArc.value = 0.0
-    progressArc.maxValue = CGFloat(player.duration)
     player.play()
-    setPlayPauseIcon(isPlaying: player.isPlaying)
+    updateView()
+    
+    if player.playbackState == MPMusicPlaybackState.playing {
+      setPlayPauseIcon(isPlaying: true)
+    }
+  }
+  
+  private func updateView() {
+    collectionName.text = player.nowPlayingItem?.albumTitle
+    cover.image = player.nowPlayingItem?.artwork?.image(at: CGSize(width: coverWidth, height: coverWidth))
+    songNameLabel.text = player.nowPlayingItem?.title
+    artistNameLabel.text = player.nowPlayingItem?.artist
+    progressArc.maxValue = CGFloat(player.nowPlayingItem?.playbackDuration ?? 0.0)
   }
   
   func stop() {
@@ -425,52 +277,51 @@ final class MusicKitPlayer: UIView {
   }
   
   private func setPlayPauseIcon(isPlaying: Bool) {
-    let config = UIImage.SymbolConfiguration(pointSize: 60)
-    playPauseButton.setImage(UIImage(systemName: isPlaying ? "pause" : "play", withConfiguration: config), for: .normal)
+    let config = UIImage.SymbolConfiguration(pointSize: 70)
+    playPauseButton.setImage(UIImage(systemName: isPlaying ? "pause.circle" : "play.circle", withConfiguration: config), for: .normal)
   }
   
   @objc private func updateProgress(_ sender: Timer) {
-    progressArc.value = CGFloat(player.currentTime)
-    elapsedTimeLabel.text = getFormattedTime(timeInterval: player.currentTime)
-    let remainingTime = player.duration - player.currentTime
+    progressArc.value = CGFloat(player.currentPlaybackTime)
+    elapsedTimeLabel.text = getFormattedTime(timeInterval: player.currentPlaybackTime)
+    var remainingTime = 0.0
+    if let duration = player.nowPlayingItem?.playbackDuration {
+      remainingTime = duration - player.currentPlaybackTime
+    }
     remainingTimeLabel.text = getFormattedTime(timeInterval: remainingTime)
+    
+    if elapsedTimeLabel.text == "00:00" {
+      updateView()
+    }
   }
   
   @objc private func progressScrubbed(_ sender: CircularSlider) {
-    player.currentTime = Float64(sender.value)
+    player.currentPlaybackTime = Float64(sender.value)
   }
   
   @objc private func didTapPrevious(_ sender: UIButton) {
-    playingIndex -= 1
-    if playingIndex < 0 {
-      playingIndex = musicCollection.getSongsCount() - 1
+    player.skipToPreviousItem()
+    if player.playbackState == MPMusicPlaybackState.playing {
+      setPlayPauseIcon(isPlaying: true)
     }
-    
-    setupPlayer(song: musicCollection.getSong(index: playingIndex))
-    play()
-    setPlayPauseIcon(isPlaying: player.isPlaying)
   }
   
   @objc private func didTapPlayPause(_ sender: UIButton) {
-    if player.isPlaying {
+    if player.playbackState == MPMusicPlaybackState.playing {
+      setPlayPauseIcon(isPlaying: false)
       player.pause()
       player.stop()
     } else {
+      setPlayPauseIcon(isPlaying: true)
       player.play()
     }
-    
-    setPlayPauseIcon(isPlaying: player.isPlaying)
   }
   
   @objc private func didTapNext(_ sender: UIButton) {
-    playingIndex += 1
-    if playingIndex >= musicCollection.getSongsCount() {
-      playingIndex = 0
+    player.skipToNextItem()
+    if player.playbackState == MPMusicPlaybackState.playing {
+      setPlayPauseIcon(isPlaying: true)
     }
-    
-    setupPlayer(song: musicCollection.getSong(index: playingIndex))
-    play()
-    setPlayPauseIcon(isPlaying: player.isPlaying)
   }
   
   private func getFormattedTime(timeInterval: TimeInterval) -> String {
@@ -481,23 +332,16 @@ final class MusicKitPlayer: UIView {
     timeFormatter.minimumFractionDigits = 0
     timeFormatter.roundingMode = .down
     
-    guard let minsString = timeFormatter.string(from: NSNumber(value: mins)), let secondsString = timeFormatter.string(from: NSNumber(value: seconds)) else {
+    guard var minsString = timeFormatter.string(from: NSNumber(value: mins)), var secondsString = timeFormatter.string(from: NSNumber(value: seconds)) else {
       return "00:00"
     }
+    if minsString == "-00" {
+      minsString = "00"
+    }
+    if secondsString == "-00" {
+      secondsString = "00"
+    }
+    
     return "\(minsString):\(secondsString)"
   }
-
 }
-
-//extension MediaPlayer: AVAudioPlayerDelegate {
-//  func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-//    didTapNext(nextButton)
-//  }
-//}
-//
-//extension UIImageView {
-//  func roundedImage() {
-//    self.layer.cornerRadius = (self.frame.size.width) / 2;
-//    self.clipsToBounds = true
-//  }
-//}
