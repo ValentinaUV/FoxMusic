@@ -11,12 +11,25 @@ final class AlbumTableViewCell: UITableViewCell {
   var album: Album? {
     didSet {
       if let album = album {
-        albumCover.image = UIImage(named: album.getImage())
         albumName.text = album.getName()
         songsCount.text = "\(album.getSongsCount()) Songs"
+        loadImage(url: album.getImageURL())
       }
     }
   }
+  
+  private func loadImage(url: URL!) {
+      if let imageUrl = url {
+        DispatchQueue.global().async {
+          if let data = try? Data(contentsOf: imageUrl) {
+            DispatchQueue.main.async {
+              self.albumCover.image = UIImage(data: data)
+            }
+          }
+        }
+      }
+    }
+
   
   private lazy var albumCover: UIImageView = {
     let view = UIImageView()
@@ -79,11 +92,11 @@ final class AlbumTableViewCell: UITableViewCell {
     
     //album cover
     NSLayoutConstraint.activate([
-      albumCover.leadingAnchor.constraint(equalTo: stackLine.leadingAnchor, constant: 16),
-      albumCover.topAnchor.constraint(equalTo: stackLine.topAnchor, constant: 16),
+      albumCover.leadingAnchor.constraint(equalTo: stackLine.leadingAnchor, constant: 0),
+      albumCover.topAnchor.constraint(equalTo: stackLine.topAnchor, constant: 0),
       albumCover.widthAnchor.constraint(equalToConstant: 100),
       albumCover.heightAnchor.constraint(equalToConstant: 100),
-      albumCover.bottomAnchor.constraint(lessThanOrEqualTo: stackLine.bottomAnchor, constant: -16)
+      albumCover.bottomAnchor.constraint(lessThanOrEqualTo: stackLine.bottomAnchor, constant: 0)
     ])
     
     //album name

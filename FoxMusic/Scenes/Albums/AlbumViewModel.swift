@@ -6,29 +6,36 @@
 //
 
 import Foundation
+import Combine
 
 class AlbumViewModel {
-//    private let albums = Album.get()
-  private var albums: [Album] = []
-    
-  init() {
-    let storage = AppleMusicStorage()
-//    storage.delegate = self
-    
-//    storage?.bindSongs = {
-////      self.authSucceeded()
-//      albums.append(Album(name: "Acoustic", image: "acoustic", songs: storage.getSongs()))
-//    }
-    
-//    storage.getSongs()
-//    albums.append(Album(name: "Acoustic", image: "acoustic", songs: storage.getSongs()))
-    
+  
+  var storage: MusicStorage!
+  let genre: Genre
+  
+  private var cancellables = Set<AnyCancellable>()
+  var albumsLoaded : (() -> ()) = {}
+  
+  private(set) var albums: [Album]! {
+    didSet {
+      albumsLoaded()
+    }
+  }
+
+  init(storage: MusicStorage, genre: Genre) {
+    self.genre = genre
+    self.storage = storage
+    subscribeToAlbums()
+    self.storage.getAlbumsByGenre(genre: genre)
   }
   
-  func receiveSongs(songs: [Song]) {
-    albums.append(Album(name: "Acoustic", image: "acoustic", songs: songs))
-    print("receiveSongs")
-    print(albums)
+  private func subscribeToAlbums() {
+    storage.albumsPublisher
+      .sink { items in
+        print("subscribeToAlbums")
+        self.albums = items
+      }
+      .store(in: &cancellables)
   }
     
   func getAlbumsCount() -> Int {

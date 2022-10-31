@@ -11,7 +11,10 @@ import Foundation
 struct Album {
   private var name: String
   private var image: String!
-  private var songs: [Song]
+  private var imageURL: URL!
+  private var artist: String!
+  private var songsCount: Int!
+  private var songs: [Song]!
     
   init(name: String, songs: [Song]) {
     self.name = name
@@ -24,20 +27,34 @@ struct Album {
     self.songs = songs
   }
   
+  init(name: String, imageURL: URL!, artist: String, songsCount: Int) {
+    self.name = name
+    self.imageURL = imageURL
+    self.artist = artist
+    self.songsCount = songsCount
+  }
+  
   func getName() -> String {
     return name
   }
     
-  func getImage() -> String {
+  func getImage() -> String! {
     return image
   }
     
   func getSongsCount() -> Int {
+    if let count = songsCount {
+      return count
+    }
     return songs.count
   }
     
   func getSong(index: Int) -> Song {
     return songs[index]
+  }
+  
+  func getImageURL() -> URL! {
+    return imageURL
   }
 }
 

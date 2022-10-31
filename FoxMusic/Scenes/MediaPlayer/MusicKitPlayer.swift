@@ -60,7 +60,6 @@ final class MusicKitPlayer: UIView {
   }()
   
   private lazy var progressArc: CircularSlider = {
-
     var options = CircularSliderOptions()
     options.barColor = UIColor.init(named: "darkGrey") ?? .darkGray
     options.thumbColor = UIColor(named: "orange") ?? .systemOrange
@@ -94,6 +93,8 @@ final class MusicKitPlayer: UIView {
     view.translatesAutoresizingMaskIntoConstraints = false
     view.font = .systemFont(ofSize: 16)
     view.textColor = .white
+    view.numberOfLines = 0
+    view.textAlignment = .center
     return view
   }()
   
@@ -102,6 +103,8 @@ final class MusicKitPlayer: UIView {
     view.translatesAutoresizingMaskIntoConstraints = false
     view.font = .systemFont(ofSize: 20, weight: .bold)
     view.textColor = UIColor.systemOrange
+    view.numberOfLines = 0
+    view.textAlignment = .center
     return view
   }()
   
@@ -110,6 +113,8 @@ final class MusicKitPlayer: UIView {
     view.translatesAutoresizingMaskIntoConstraints = false
     view.font = .systemFont(ofSize: 16)
     view.textColor = .white
+    view.numberOfLines = 0
+    view.textAlignment = .center
     return view
   }()
   
@@ -229,19 +234,25 @@ final class MusicKitPlayer: UIView {
     //artist name
     NSLayoutConstraint.activate([
       artistNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-      artistNameLabel.topAnchor.constraint(equalTo: progressArc.bottomAnchor, constant: 20)
+      artistNameLabel.topAnchor.constraint(equalTo: progressArc.bottomAnchor, constant: 20),
+      artistNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+      artistNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
     ])
     
     //song name
     NSLayoutConstraint.activate([
       songNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-      songNameLabel.topAnchor.constraint(equalTo: artistNameLabel.bottomAnchor, constant: 8)
+      songNameLabel.topAnchor.constraint(equalTo: artistNameLabel.bottomAnchor, constant: 8),
+      songNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+      songNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
     ])
     
     //collection name
     NSLayoutConstraint.activate([
       collectionName.centerXAnchor.constraint(equalTo: centerXAnchor),
-      collectionName.topAnchor.constraint(equalTo: songNameLabel.bottomAnchor, constant: 8)
+      collectionName.topAnchor.constraint(equalTo: songNameLabel.bottomAnchor, constant: 8),
+      collectionName.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+      collectionName.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
     ])
   
     //control stack

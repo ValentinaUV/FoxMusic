@@ -11,6 +11,7 @@ struct Constants {
   
   struct albumsScreen {
     static let title = "My Music Player"
+    static let albumsLimit = 20
   }
   
   struct genresScreen {

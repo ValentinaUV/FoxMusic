@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     window = UIWindow(windowScene: windowScene)
     let controller = GenreViewController()
-    controller.viewModel = GenreViewModel()
+    controller.viewModel = GenreViewModel(storage: AppleMusicStorage())
     window?.rootViewController = UINavigationController(rootViewController: controller)
     window?.makeKeyAndVisible()
   }

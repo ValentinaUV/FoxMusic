@@ -16,7 +16,7 @@ class GenreViewModel {
   
   var genresLoaded : (() -> ()) = {}
   var genreWithSongsLoaded : (() -> ()) = {}
-  var albumLoaded : (() -> ()) = {}
+//  var albumLoaded : (() -> ()) = {}
   
   private(set) var genres: [Genre]! {
     didSet {
@@ -25,23 +25,23 @@ class GenreViewModel {
     }
   }
   
-  private(set) var genreWithSongs: Genre! {
-    didSet {
-      genreWithSongsLoaded()
-    }
-  }
+//  private(set) var genreWithSongs: Genre! {
+//    didSet {
+//      genreWithSongsLoaded()
+//    }
+//  }
+//
+//  private(set) var album: MusicKit.Album! {
+//    didSet {
+//      albumLoaded()
+//    }
+//  }
   
-  private(set) var album: MusicKit.Album! {
-    didSet {
-      albumLoaded()
-    }
-  }
-  
-  init() {
-    storage = AppleMusicStorage()
+  init(storage: MusicStorage) {
+    self.storage = storage
     subscribeToGenres()
-    subscribeToAlbum()
-    storage.getGenres()
+//    subscribeToAlbum()
+    self.storage.getGenres()
   }
   
   func getGenresCount() -> Int {
@@ -61,13 +61,13 @@ class GenreViewModel {
       .store(in: &cancellables)
   }
   
-  private func subscribeToAlbum() {
-    storage.albumPublisher
-      .sink { item in
-        self.album = item
-      }
-      .store(in: &cancellables)
-  }
+//  private func subscribeToAlbum() {
+//    storage.albumPublisher
+//      .sink { item in
+//        self.album = item
+//      }
+//      .store(in: &cancellables)
+//  }
   
   func getSongsByGenre(index: Int) {
     print("getSongsByGenre")

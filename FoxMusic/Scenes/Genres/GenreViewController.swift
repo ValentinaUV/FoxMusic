@@ -32,11 +32,10 @@ class GenreViewController: UIViewController {
     collectionView.backgroundColor = .systemOrange
     collectionView.register(GenreCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
     genresLoaded()
-    albumLoaded()
+//    albumLoaded()
   }
   
   private func genresLoaded() {
-    print("genresLoaded")
     viewModel?.genresLoaded = {
       DispatchQueue.main.async {
         self.collectionView.reloadData()
@@ -44,38 +43,29 @@ class GenreViewController: UIViewController {
     }
   }
   
-  private func albumLoaded() {
-    print("albumLoaded")
-    viewModel?.albumLoaded = {
-      DispatchQueue.main.async {
-        let vc = MusicPlayerViewController(album: self.viewModel.album)
-        let backButton = UIBarButtonItem()
-        backButton.title = Constants.playerScreen.backButtonTitle
-        self.navigationItem.backBarButtonItem = backButton
-        self.show(vc, sender: self)
-      }
-    }
-  }
-  
-  private func genreWithSongsLoaded() {
-//    viewModel?.genreWithSongsLoaded = {
+//  private func albumLoaded() {
+//    print("albumLoaded")
+//    viewModel?.albumLoaded = {
 //      DispatchQueue.main.async {
-//        guard let genre = self.viewModel?.genreWithSongs else {return}
-        
-//        let vc = MusicPlayerViewController(musicCollection: genre)
+//        let vc = MusicPlayerViewController(album: self.viewModel.album)
 //        let backButton = UIBarButtonItem()
 //        backButton.title = Constants.playerScreen.backButtonTitle
 //        self.navigationItem.backBarButtonItem = backButton
 //        self.show(vc, sender: self)
 //      }
 //    }
-  }
+//  }
+  
 }
 
 extension GenreViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    viewModel?.getSongsByGenre(index: indexPath.row)
+    DispatchQueue.main.async {
+      let vc = AlbumViewController()
+      vc.viewModel = AlbumViewModel(storage: AppleMusicStorage(), genre: self.viewModel.getGenre(index: indexPath.row))
+      self.show(vc, sender: self)
+    }
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

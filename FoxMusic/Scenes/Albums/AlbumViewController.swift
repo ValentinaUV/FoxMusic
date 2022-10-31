@@ -33,9 +33,10 @@ class AlbumViewController: UIViewController {
   }
   
   private func setupView() {
-    title = Constants.albumsScreen.title
+    title = viewModel.genre.getName()
     view.addSubview(tableView)
     setupConstraints()
+    albumsLoaded()
   }
   
   private func setupConstraints() {
@@ -45,6 +46,14 @@ class AlbumViewController: UIViewController {
       tableView.topAnchor.constraint(equalTo: view.topAnchor),
       tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
     ])
+  }
+  
+  private func albumsLoaded() {
+    viewModel?.albumsLoaded = {
+      DispatchQueue.main.async {
+        self.tableView.reloadData()
+      }
+    }
   }
 }
 

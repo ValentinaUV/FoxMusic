@@ -13,12 +13,12 @@ protocol MusicStorage {
   
   var genresPublisher: Published<[Genre]>.Publisher { get }
   var genreWithSongsPublisher: Published<Genre?>.Publisher { get }
-  var albumPublisher: Published<MusicKit.Album?>.Publisher { get }
+  var albumsPublisher: Published<[Album]>.Publisher { get }
 
   func getGenres()
   func getSongsByGenre(genre: Genre)
+  func getAlbumsByGenre(genre: Genre)
 }
-
 
 public typealias Genres = MusicItemCollection<MusicKit.Genre>
 public typealias Songs = MusicItemCollection<MusicKit.Song>
@@ -34,8 +34,8 @@ class AppleMusicStorage: MusicStorage {
   @Published var genreWithSongs: Genre?
   var genreWithSongsPublisher: Published<Genre?>.Publisher { $genreWithSongs }
   
-  @Published var album: MusicKit.Album?
-  var albumPublisher: Published<MusicKit.Album?>.Publisher { $album }
+  @Published var albums: [Album] = []
+  var albumsPublisher: Published<[Album]>.Publisher { $albums }
   
   private func getCountryCode() async throws -> String {
     return try await MusicDataRequest.currentCountryCode
@@ -110,9 +110,45 @@ class AppleMusicStorage: MusicStorage {
         case .authorized:
           let response = try await fetchCatalogCharts(genre: musicKitGenre, kinds: [.mostPlayed], types: [MusicKit.Album.self], limit: 10, offset: 0)
           guard let album = response.albumCharts.first?.items.first else { return }
-          self.album = album
+//          self.album = album
+          /////////////////////////////////////
         default:
           throw MusicStorageError.notAuthorized(for: "Album Charts")
+        }
+      }
+    }
+  }
+  
+  @available(iOS 16.0, *)
+  func getAlbumsByGenre(genre: Genre) {
+    Task {
+      do {
+        let musicKitGenre = try await getGenreById(id: genre.getId())
+        print("musicKitGenre for getAlbumsByGenre: \(musicKitGenre)")
+        let status = await MusicAuthorization.request()
+        switch status {
+        case .authorized:
+          let response = try await fetchCatalogCharts(
+            genre: musicKitGenre,
+            kinds: [.mostPlayed],
+            types: [MusicKit.Album.self],
+            limit: Constants.albumsScreen.albumsLimit,
+            offset: 0)
+          guard let albums = response.albumCharts.first?.items else { return }
+          var items: [Album] = []
+          for album in albums {
+            items.append(
+              Album(
+                name: album.title,
+                imageURL: album.artwork?.url(width: 100, height: 100) ?? nil,
+                artist: album.artistName,
+                songsCount: album.trackCount)
+            )
+          }
+          self.albums = items
+          
+        default:
+          throw MusicStorageError.notAuthorized(for: "Albums Charts")
         }
       }
     }
