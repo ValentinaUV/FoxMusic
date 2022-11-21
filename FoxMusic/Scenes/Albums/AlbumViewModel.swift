@@ -11,7 +11,7 @@ import Combine
 class AlbumViewModel {
   
   var storage: MusicStorage!
-  let genre: Genre
+  let genre: Genre!
   
   private var cancellables = Set<AnyCancellable>()
   var albumsLoaded : (() -> ()) = {}
@@ -22,7 +22,7 @@ class AlbumViewModel {
     }
   }
 
-  init(storage: MusicStorage, genre: Genre) {
+  init(storage: MusicStorage, genre: Genre!) {
     self.genre = genre
     self.storage = storage
     subscribeToAlbums()

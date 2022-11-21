@@ -7,9 +7,10 @@
 
 import UIKit
 
-class AlbumViewController: UIViewController {
+class AlbumViewController: UIViewController, SegmentedViewControllerProtocol {
 
   var viewModel: AlbumViewModel!
+  var headerTitle: String?
     
   private lazy var tableView: UITableView = {
     let table = UITableView()
@@ -33,7 +34,8 @@ class AlbumViewController: UIViewController {
   }
   
   private func setupView() {
-    title = viewModel.genre.getName()
+    title = Constants.albumsScreen.barTitle
+    headerTitle = Constants.albumsScreen.title
     view.addSubview(tableView)
     setupConstraints()
     albumsLoaded()

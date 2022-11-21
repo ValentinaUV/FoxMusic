@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D2AE5A5291A978000E16EF3 /* SegmentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D2AE5A4291A978000E16EF3 /* SegmentedViewController.swift */; };
 		7D34709028D2D8FB00616560 /* GenreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D34708F28D2D8FB00616560 /* GenreViewController.swift */; };
 		7D34709328D2DB5D00616560 /* MusicCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D34709228D2DB5D00616560 /* MusicCollection.swift */; };
 		7D34709528D2DBA000616560 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D34709428D2DBA000616560 /* Genre.swift */; };
@@ -18,6 +19,7 @@
 		7D489FAF28C8786D00FEA7B6 /* AppleMusicURLComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D489FAE28C8786D00FEA7B6 /* AppleMusicURLComponents.swift */; };
 		7D5AD65128EC75D4007E98B3 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5AD65028EC75D4007E98B3 /* PlayerViewController.swift */; };
 		7D5AD65328ED672B007E98B3 /* MusicKitPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D5AD65228ED672B007E98B3 /* MusicKitPlayer.swift */; };
+		7D7E90B22927A7F5007835ED /* GenreHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7E90B12927A7F5007835ED /* GenreHeader.swift */; };
 		A7845AC228B5083D00E26C89 /* ThemeConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7845AC128B5083D00E26C89 /* ThemeConfigurator.swift */; };
 		A7845AC528B609DE00E26C89 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7845AC428B609DE00E26C89 /* Constants.swift */; };
 		A78CB380288FF97E00A2AAB8 /* CircularSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78CB37F288FF97E00A2AAB8 /* CircularSlider.swift */; };
@@ -84,6 +86,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7D2AE5A4291A978000E16EF3 /* SegmentedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedViewController.swift; sourceTree = "<group>"; };
 		7D34708F28D2D8FB00616560 /* GenreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreViewController.swift; sourceTree = "<group>"; };
 		7D34709228D2DB5D00616560 /* MusicCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicCollection.swift; sourceTree = "<group>"; };
 		7D34709428D2DBA000616560 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
@@ -95,6 +98,7 @@
 		7D489FAE28C8786D00FEA7B6 /* AppleMusicURLComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicURLComponents.swift; sourceTree = "<group>"; };
 		7D5AD65028EC75D4007E98B3 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		7D5AD65228ED672B007E98B3 /* MusicKitPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicKitPlayer.swift; sourceTree = "<group>"; };
+		7D7E90B12927A7F5007835ED /* GenreHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreHeader.swift; sourceTree = "<group>"; };
 		A7845AC128B5083D00E26C89 /* ThemeConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeConfigurator.swift; sourceTree = "<group>"; };
 		A7845AC428B609DE00E26C89 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A78CB37F288FF97E00A2AAB8 /* CircularSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularSlider.swift; sourceTree = "<group>"; };
@@ -324,6 +328,8 @@
 				7D489FAE28C8786D00FEA7B6 /* AppleMusicURLComponents.swift */,
 				7D34709A28E2F0B300616560 /* MusicStorageError.swift */,
 				7D5AD65028EC75D4007E98B3 /* PlayerViewController.swift */,
+				7D2AE5A4291A978000E16EF3 /* SegmentedViewController.swift */,
+				7D7E90B12927A7F5007835ED /* GenreHeader.swift */,
 			);
 			path = FoxMusic;
 			sourceTree = "<group>";
@@ -479,11 +485,13 @@
 				7D34709328D2DB5D00616560 /* MusicCollection.swift in Sources */,
 				A7845AC228B5083D00E26C89 /* ThemeConfigurator.swift in Sources */,
 				A7CEFF57287EBC3D0014B37C /* SceneDelegate.swift in Sources */,
+				7D2AE5A5291A978000E16EF3 /* SegmentedViewController.swift in Sources */,
 				A7CEFFA3287EBCCE0014B37C /* Album.swift in Sources */,
 				7D5AD65328ED672B007E98B3 /* MusicKitPlayer.swift in Sources */,
 				A7CEFFC3287EBCCE0014B37C /* AlbumViewController.swift in Sources */,
 				A7CEFFC4287EBCCE0014B37C /* MusicPlayerViewController.swift in Sources */,
 				A7CEFFC1287EBCCE0014B37C /* AlbumTableViewCell.swift in Sources */,
+				7D7E90B22927A7F5007835ED /* GenreHeader.swift in Sources */,
 				A7845AC528B609DE00E26C89 /* Constants.swift in Sources */,
 				7D34709928D2E05D00616560 /* GenreViewModel.swift in Sources */,
 				7D5AD65128EC75D4007E98B3 /* PlayerViewController.swift in Sources */,
@@ -648,7 +656,6 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -679,7 +686,6 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

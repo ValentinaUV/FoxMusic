@@ -10,11 +10,13 @@ import Foundation
 struct Constants {
   
   struct albumsScreen {
-    static let title = "My Music Player"
-    static let albumsLimit = 20
+    static let barTitle = "FoxMusic"
+    static let title = "Albums"
+    static let albumsLimit = 50
   }
   
   struct genresScreen {
+    static let barTitle = "FoxMusic"
     static let title = "Genres"
   }
   

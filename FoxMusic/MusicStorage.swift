@@ -17,7 +17,7 @@ protocol MusicStorage {
 
   func getGenres()
   func getSongsByGenre(genre: Genre)
-  func getAlbumsByGenre(genre: Genre)
+  func getAlbumsByGenre(genre: Genre!)
 }
 
 public typealias Genres = MusicItemCollection<MusicKit.Genre>
@@ -74,7 +74,7 @@ class AppleMusicStorage: MusicStorage {
   }
   
   @available(iOS 16.0, *)
-  private func fetchCatalogCharts(genre: MusicKit.Genre, kinds: [MusicCatalogChartKind], types: [MusicCatalogChartRequestable.Type], limit: Int?, offset: Int?) async throws -> MusicCatalogChartsResponse {
+  private func fetchCatalogCharts(genre: MusicKit.Genre!, kinds: [MusicCatalogChartKind], types: [MusicCatalogChartRequestable.Type], limit: Int?, offset: Int?) async throws -> MusicCatalogChartsResponse {
     let chartTypes = types.map { $0}
     var request = MusicCatalogChartsRequest(genre: genre, kinds: kinds, types: chartTypes)
     request.limit = limit
@@ -120,11 +120,15 @@ class AppleMusicStorage: MusicStorage {
   }
   
   @available(iOS 16.0, *)
-  func getAlbumsByGenre(genre: Genre) {
+  func getAlbumsByGenre(genre: Genre!) {
     Task {
       do {
-        let musicKitGenre = try await getGenreById(id: genre.getId())
-        print("musicKitGenre for getAlbumsByGenre: \(musicKitGenre)")
+        var musicKitGenre: MusicKit.Genre! = nil
+        if genre != nil {
+          musicKitGenre = try await getGenreById(id: genre.getId())
+          print("musicKitGenre for getAlbumsByGenre: \(musicKitGenre)")
+        }
+        
         let status = await MusicAuthorization.request()
         switch status {
         case .authorized:
